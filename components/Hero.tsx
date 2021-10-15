@@ -23,14 +23,13 @@ const Hero = () => {
                   />
                 </a>
                 <h1 className="mt-4 text-4xl tracking-tight font-extrabold text-white sm:mt-5 sm:leading-none lg:mt-6 lg:text-5xl xl:text-6xl">
-                  <span className="md:block">Make Money</span>{" "}
+                  <span className="md:block">Delta One Stablecoin</span>{" "}
                   <span className="text-indigo-400 md:block">
-                    while you sleep.
+                    Giving 3000%+ APY for Stablecoin hodlers.
                   </span>
                 </h1>
                 <p className="mt-3 text-base text-gray-300 sm:mt-5 sm:text-xl lg:text-lg xl:text-xl">
-                  Deploy advanced yield farming strategies with the click of a
-                  button. Customize to your risk appetite.
+                  Simply buy the stablecoin and make money while you sleep.
                 </p>
                 <p className="mt-8 text-sm text-white uppercase tracking-wide font-semibold sm:mt-10">
                   Used by: 292 Solana Wallets.

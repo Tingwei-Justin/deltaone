@@ -86,7 +86,7 @@ export default function Example() {
             ))}
           </div>
           <p className="mt-8 text-base text-gray-400 md:mt-0 md:order-1">
-            &copy; 2021 Delta, Inc. All rights reserved.
+            Delta Protocol - Launched October 2021 - Solana Ignition Hackathon.
           </p>
         </div>
       </div>
