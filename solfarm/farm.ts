@@ -1,3 +1,6 @@
+import { FARM_PLATFORMS } from "./config";
+import {NATIVE_SOL, TOKENS} from "./tokens"
+import {find} from "lodash"
 export const FARMS = [
   {
     symbol: "LARIX-RAY",
@@ -9,7 +12,6 @@ export const FARMS = [
 
     mintAddress: "ZRDfSLgWGeaYSmhdPvFNKQQhDcYdZQaue2N8YDmHX4q",
     decimals: TOKENS.LARIX.decimals,
-    logos: [larixLogo, rayLogo],
     dualYield: true,
     liquidityMining: false,
     totalTulipEmission: 0,
@@ -21,7 +23,6 @@ export const FARMS = [
     link: "https://raydium.io/liquidity/?ammId=EBqQdu9rGe6j3WGJQSyTvDjUMWcRd6uLcxSS4TbFT31t",
     rewardEndSlot: 93847628,
     platform: FARM_PLATFORMS.RAYDIUM,
-    isNew: isFarmNew("16/10/2021"),
   },
   {
     symbol: "LARIX-USDC",
@@ -33,7 +34,6 @@ export const FARMS = [
 
     mintAddress: "7yieit4YsNsZ9CAK8H5ZEMvvk35kPEHHeXwp6naoWU9V",
     decimals: TOKENS.LARIX.decimals,
-    logos: [larixLogo, usdcLogo],
     dualYield: false,
     liquidityMining: false,
     totalTulipEmission: 0,
@@ -56,7 +56,6 @@ export const FARMS = [
 
     mintAddress: "A8ZYmnZ1vwxUa4wpJVUaJgegsuTEz5TKy5CiJXffvmpt",
     decimals: TOKENS.GRAPE.decimals,
-    logos: [grapeLogo, usdcLogo],
     dualYield: false,
     liquidityMining: false,
     totalTulipEmission: 0,
@@ -79,7 +78,6 @@ export const FARMS = [
 
     mintAddress: "9shGU9f1EsxAbiR567MYZ78WUiS6ZNCYbHe53WUULQ7n",
     decimals: TOKENS.ATLAS.decimals,
-    logos: [atlasLogo, usdcLogo],
     dualYield: false,
     liquidityMining: false,
     totalTulipEmission: 0,
@@ -102,7 +100,6 @@ export const FARMS = [
 
     mintAddress: "8MbKSBpyXs8fVneKgt71jfHrn5SWtX8n4wMLpiVfF9So",
     decimals: TOKENS.POLIS.decimals,
-    logos: [polisLogo, usdcLogo],
     dualYield: false,
     liquidityMining: false,
     totalTulipEmission: 0,
@@ -125,7 +122,6 @@ export const FARMS = [
 
     mintAddress: "418MFhkaYQtbn529wmjLLqL6uKxDz7j4eZBaV1cobkyd",
     decimals: TOKENS.ATLAS.decimals,
-    logos: [atlasLogo, rayLogo],
     dualYield: true,
     liquidityMining: false,
     totalTulipEmission: 0,
@@ -148,7 +144,6 @@ export const FARMS = [
 
     mintAddress: "9ysGKUH6WqzjQEUT4dxqYCUaFNVK9QFEa24pGzjFq8xg",
     decimals: TOKENS.POLIS.decimals,
-    logos: [polisLogo, rayLogo],
     dualYield: true,
     liquidityMining: false,
     totalTulipEmission: 0,
@@ -171,7 +166,6 @@ export const FARMS = [
 
     mintAddress: "2doeZGLJyACtaG9DCUyqMLtswesfje1hjNA11hMdj6YU",
     decimals: TOKENS.TULIP.decimals,
-    logos: [tulipLogo, usdcLogo],
     dualYield: false,
     liquidityMining: true,
     totalTulipEmission: 450000 / 810,
@@ -193,7 +187,6 @@ export const FARMS = [
     mintAddress: "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R",
     decimals: 6,
     referrer: "33XpMmMQRf6tSPpmYyzpwU4uXpZHkFwCZsusD9dMYkjy",
-    logos: [rayLogo, emptyLogo],
     singleStake: true,
     liquidityMining: true,
     totalTulipEmission: 450000 / 810,
@@ -214,7 +207,6 @@ export const FARMS = [
 
     mintAddress: "C3sT1R3nsw4AVdepvLTLKr5Gvszr7jufyBWUCvy4TUvT",
     decimals: TOKENS.RAY.decimals,
-    logos: [rayLogo, usdtLogo],
     liquidityMining: true,
     totalTulipEmission: 750000 / 630,
     saber: false,
@@ -235,7 +227,6 @@ export const FARMS = [
 
     mintAddress: "FbC6K13MzHvN42bXrtGaWsvZY9fxrackRSZcBGfjPc7m",
     decimals: TOKENS.RAY.decimals,
-    logos: [rayLogo, usdcLogo],
     liquidityMining: true,
     totalTulipEmission: 750000 / 630,
     saber: false,
@@ -259,7 +250,6 @@ export const FARMS = [
 
     mintAddress: "7P5Thr9Egi2rvMmEuQkLn8x8e8Qro7u2U7yLD2tU2Hbe",
     decimals: TOKENS.RAY.decimals,
-    logos: [rayLogo, srmLogo],
     liquidityMining: true,
     totalTulipEmission: 750000 / 630,
     saber: false,
@@ -283,7 +273,6 @@ export const FARMS = [
 
     mintAddress: "89ZKE4aoyfLBe2RuV6jM3JGNhaV18Nxh8eNtjRcndBip",
     decimals: TOKENS.RAY.decimals,
-    logos: [rayLogo, solLogo],
     liquidityMining: true,
     totalTulipEmission: 750000 / 630,
     saber: false,
@@ -307,7 +296,6 @@ export const FARMS = [
 
     mintAddress: "mjQH33MqZv5aKAbKHi8dG3g3qXeRQqq1GFcXceZkNSr",
     decimals: TOKENS.RAY.decimals,
-    logos: [rayLogo, ethLogo],
     liquidityMining: true,
     totalTulipEmission: 750000 / 630,
     saber: false,
@@ -331,7 +319,6 @@ export const FARMS = [
 
     mintAddress: "A5zanvgtioZGiJMdEyaKN4XQmJsp1p7uVxaq2696REvQ",
     decimals: TOKENS.MEDIA.decimals,
-    logos: [mediaLogo, usdcLogo],
     liquidityMining: true,
     totalTulipEmission: 750000 / 630,
     saber: false,
@@ -352,7 +339,6 @@ export const FARMS = [
 
     mintAddress: "Cz1kUvHw98imKkrqqu95GQB9h1frY8RikxPojMwWKGXf",
     decimals: TOKENS.COPE.decimals,
-    logos: [copeLogo, usdcLogo],
     liquidityMining: true,
     totalTulipEmission: 450000 / 810,
     saber: false,
@@ -374,7 +360,6 @@ export const FARMS = [
 
     mintAddress: "3H9NxvaZoxMZZDZcbBDdWMKbrfNj7PCF5sbRwDr7SdDW",
     decimals: TOKENS.MER.decimals,
-    logos: [merLogo, usdcLogo],
     liquidityMining: true,
     totalTulipEmission: 450000 / 810,
     saber: false,
@@ -395,7 +380,6 @@ export const FARMS = [
 
     mintAddress: "Cq4HyW5xia37tKejPF2XfZeXQoPYW6KfbPvxvw5eRoUE",
     decimals: TOKENS.ROPE.decimals,
-    logos: [ropeLogo, usdcLogo],
     liquidityMining: true,
     totalTulipEmission: 450000 / 810,
     saber: false,
@@ -416,7 +400,6 @@ export const FARMS = [
 
     mintAddress: "iUDasAP2nXm5wvTukAHEKSdSXn8vQkRtaiShs9ceGB7",
     decimals: TOKENS.ALEPH.decimals,
-    logos: [alephLogo, usdcLogo],
     dualYield: false,
     liquidityMining: true,
     totalTulipEmission: 450000 / 810,
@@ -439,7 +422,6 @@ export const FARMS = [
 
     mintAddress: "G8qcfeFqxwbCqpxv5LpLWxUCd1PyMB5nWb5e5YyxLMKg",
     decimals: TOKENS.SNY.decimals,
-    logos: [snyLogo, usdcLogo],
     dualYield: false,
     liquidityMining: true,
     totalTulipEmission: 450000 / 810,
@@ -462,7 +444,6 @@ export const FARMS = [
 
     mintAddress: "2Xxbm1hdv5wPeen5ponDSMT3VqhGMTQ7mH9stNXm9shU",
     decimals: TOKENS.SLRS.decimals,
-    logos: [slrsLogo, usdcLogo],
     dualYield: false,
     liquidityMining: true,
     totalTulipEmission: 0, //450000 / 810
@@ -485,7 +466,6 @@ export const FARMS = [
 
     mintAddress: "cjZmbt8sJgaoyWYUttomAu5LJYU44ZrcKTbzTSEPDVw",
     decimals: TOKENS.LIKE.decimals,
-    logos: [likeLogo, usdcLogo],
     dualYield: false,
     liquidityMining: false,
     totalTulipEmission: 0,
@@ -507,7 +487,6 @@ export const FARMS = [
 
     mintAddress: "9nQPYJvysyfnXhQ6nkK5V7sZG26hmDgusfdNQijRk5LD",
     decimals: TOKENS.BOP.decimals,
-    logos: [bopLogo, rayLogo],
     dualYield: false,
     liquidityMining: false,
     totalTulipEmission: 0,
@@ -527,7 +506,6 @@ export const FARMS = [
 
     mintAddress: "HwzkXyX8B45LsaHXwY8su92NoRBS5GQC32HzjQRDqPnr",
     decimals: TOKENS.SAMO.decimals,
-    logos: [samoLogo, rayLogo],
     dualYield: false,
     liquidityMining: false,
     totalTulipEmission: 0,
@@ -547,7 +525,6 @@ export const FARMS = [
 
     mintAddress: "DkiqCQ792n743xjWQVCbBUaVtkdiuvQeYndM53ReWnCC",
     decimals: TOKENS.MNGO.decimals,
-    logos: [mngoLogo, usdcLogo],
     dualYield: false,
     liquidityMining: false,
     totalTulipEmission: 0,
@@ -570,7 +547,6 @@ export const FARMS = [
 
     mintAddress: "7P5Thr9Egi2rvMmEuQkLn8x8e8Qro7u2U7yLD2tU2Hbe",
     decimals: TOKENS.RAY.decimals,
-    logos: [rayLogo, srmLogo],
     liquidityMining: false,
     totalTulipEmission: 0,
     saber: false,
@@ -595,7 +571,6 @@ export const FARMS = [
 
     mintAddress: "3k8BDobgihmk72jVmXYLE168bxxQUhqqyESW4dQVktqC",
     decimals: TOKENS.STEP.decimals,
-    logos: [stepLogo, usdcLogo],
     liquidityMining: true,
     totalTulipEmission: 750000 / 630,
     saber: false,
@@ -617,7 +592,6 @@ export const FARMS = [
 
     mintAddress: "CHT8sft3h3gpLYbCcZ9o27mT5s3Z6VifBVbUiDvprHPW",
     decimals: 6,
-    logos: [kinLogo, rayLogo],
     dualYield: true,
     liquidityMining: true,
     totalTulipEmission: 0,
@@ -638,7 +612,6 @@ export const FARMS = [
 
     mintAddress: "DsBuznXRTmzvEdb36Dx3aVLVo1XmH7r1PRZUFugLPTFv",
     decimals: TOKENS.FIDA.decimals,
-    logos: [fidaLogo, rayLogo],
     dualYield: true,
     liquidityMining: true,
     totalTulipEmission: 0,
@@ -659,7 +632,6 @@ export const FARMS = [
 
     mintAddress: "FwaX9W7iThTZH5MFeasxdLpxTVxRcM7ZHieTCnYog8Yb",
     decimals: TOKENS.OXY.decimals,
-    logos: [oxyLogo, rayLogo],
     dualYield: true,
     liquidityMining: true,
     totalTulipEmission: 0,
@@ -680,7 +652,6 @@ export const FARMS = [
 
     mintAddress: "CcKK8srfVdTSsFGV3VLBb2YDbzF4T4NM2C3UEjC39RLP",
     decimals: TOKENS.MAPS.decimals,
-    logos: [mapsLogo, rayLogo],
     dualYield: true,
     liquidityMining: true,
     totalTulipEmission: 0,
@@ -693,5 +664,5 @@ export const FARMS = [
   },
 ];
 
-export const getFarmBySymbol = (symbol) =>
-  find(FARMS, (farm) => farm.symbol === symbol);
+export const getFarmBySymbol = (symbol: string) =>
+find(FARMS, (farm: { symbol: string; }) => farm.symbol === symbol);

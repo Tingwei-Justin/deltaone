@@ -18,11 +18,6 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "solfarm/web3.js",
-    "solfarm/farm.js",
-    "solfarm/levFarmUtils.js",
-    "solfarm/multipleAccount.js",
-    "solfarm/layouts.js"
   ],
   "exclude": ["node_modules"]
 }

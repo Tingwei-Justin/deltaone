@@ -14,7 +14,6 @@ import {
   getReserveByName,
   getVaultProgramId,
   getVaultSerumVaultSigner,
-  TOKENS,
 } from "./config";
 import { getFarmBySymbol } from "./farm";
 import { getMultipleAccounts } from "./getMultipleAccounts";
@@ -26,6 +25,7 @@ import {
   findUserFarmManagerAddress,
   findUserFarmObligationAddress,
 } from "./levFarmUtils";
+import { TOKENS } from "./tokens";
 export const addLiquidity = async (
   assetSymbol: any,
   reserveName: any,

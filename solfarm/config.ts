@@ -643,19 +643,6 @@ export const isSupportedLendingFarm = (name: string) =>
 export const getLendingReserveByAccount = (account: string) =>
   find(lendConfig.lending.reserves, (reserve) => reserve.account === account);
 //#endregion
-
-export const TOKENS = {
-  TULIP: {
-    mintAddress: "TuLipcqtGVXP9XR62wM8WWCm6a9vhLs7T1uoWBk6FDs",
-  },
-  WSOL: {
-    symbol: "SOL",
-    name: "Wrapped Solana",
-    mintAddress: "So11111111111111111111111111111111111111112",
-    decimals: 9,
-    referrer: "HTcarLHe7WRxBQCWvhVB8AP56pnEtJUV2jDGvcpY3xo5",
-  },
-};
 export const FARM_PLATFORMS = {
   RAYDIUM: "raydium",
   SABER: "saber",

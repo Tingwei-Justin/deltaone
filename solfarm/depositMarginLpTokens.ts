@@ -37,9 +37,9 @@ import {
   getVaultRewardAccountA,
   getVaultRewardAccountB,
   getVaultTulipTokenAccount,
-  TOKENS,
 } from "./config";
 import { getFarmBySymbol } from "./farm";
+import { farmIdl } from "./levFarm";
 import {
   findLeveragedFarmAddress,
   findObligationVaultAddress,
@@ -47,6 +47,7 @@ import {
   findUserFarmAddress,
   findUserFarmObligationAddress,
 } from "./levFarmUtils";
+import { TOKENS } from "./tokens";
 export const depositMarginLpTokens = async (
   assetSymbol: any,
   reserveName: any,
@@ -73,18 +74,18 @@ export const depositMarginLpTokens = async (
   const farm = getFarmBySymbol(assetSymbol),
     reserve = getReserveByName(reserveName),
     tulipTokenMint = new anchor.web3.PublicKey(TOKENS.TULIP.mintAddress),
-    baseToken = farm.coins[0],
-    quoteToken = farm.coins[1],
+    baseToken = farm?.coins[0],
+    quoteToken = farm?.coins[1],
     isTulipRewardAccountValid = isMintAddressExisting(TOKENS.TULIP.mintAddress);
 
-  const farmDetails = getStore("FarmStore").getFarm(farm.mintAddress);
+  const farmDetails = getStore("FarmStore").getFarm(farm?.mintAddress);
   const { userFarmInfo } = farmDetails || {};
 
   const [userFarm] = await findUserFarmAddress(
     provider.wallet.publicKey,
     new anchor.web3.PublicKey(getLendingFarmProgramId()), // lending_info.json -> programs -> farm -> id
     new anchor.BN(0),
-    new anchor.BN(farm.marginIndex)
+    new anchor.BN(farm?.marginIndex)
   );
 
   const [obligationVaultAccount] = await findObligationVaultAddress(
@@ -110,7 +111,7 @@ export const depositMarginLpTokens = async (
   );
 
   const solfarmVaultProgramId = new anchor.web3.PublicKey(
-    farm.platform === FARM_PLATFORMS.ORCA
+    farm?.platform === FARM_PLATFORMS.ORCA
       ? getOrcaVaultProgramId()
       : getVaultProgramId()
   );
@@ -121,7 +122,7 @@ export const depositMarginLpTokens = async (
     solfarmVaultProgramId,
     new anchor.web3.PublicKey(getLendingFarmAccount(assetSymbol).serum_market),
     new anchor.web3.PublicKey(getLendingFarmProgramId()),
-    new anchor.BN(farm.marginIndex)
+    new anchor.BN(farm?.marginIndex)
   );
 
   const lendingMarketAccount = new anchor.web3.PublicKey(
@@ -137,7 +138,7 @@ export const depositMarginLpTokens = async (
   const userFarmManagerLpTokenAccount = await createAssociatedTokenAccount(
     provider,
     obligationVaultAccount,
-    new anchor.web3.PublicKey(farm.mintAddress)
+    new anchor.web3.PublicKey(farm?.mintAddress)
   );
 
   let txn;
@@ -417,3 +418,4 @@ export const depositMarginLpTokens = async (
 
   return txn;
 };
+

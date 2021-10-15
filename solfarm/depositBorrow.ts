@@ -18,7 +18,6 @@ import {
   getVaultAccount,
   getVaultProgramId,
   TOKEN_PROGRAM_ID,
-  TOKENS,
 } from "./config";
 import { getFarmBySymbol } from "./farm";
 import {
@@ -28,6 +27,7 @@ import {
   findUserFarmAddress,
   findUserFarmObligationAddress,
 } from "./levFarmUtils";
+import { TOKENS } from "./tokens";
 export const depositBorrow = async (
   assetSymbol: any,
   reserveName: any,

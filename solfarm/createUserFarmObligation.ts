@@ -10,7 +10,6 @@ import {
   getLendingProgramId,
   getOrcaVaultProgramId,
   getVaultProgramId,
-  TOKENS,
 } from "./config";
 import { getFarmBySymbol } from "./farm";
 import { getMultipleAccounts } from "./getMultipleAccounts";
@@ -20,6 +19,7 @@ import {
   findUserFarmAddress,
   findUserFarmObligationAddress,
 } from "./levFarmUtils";
+import { TOKENS } from "./tokens";
 
 export const createUserFarmObligation = async (assetSymbol, obligationIdx) => {
   // console.log("obligation index", obligationIdx);

@@ -1,13 +1,14 @@
 import anchor from "@project-serum/anchor";
 import * as serumAssoToken from "@project-serum/associated-token";
 
-import { getLendingFarmProgramId, TOKENS } from "./config";
+import { getLendingFarmProgramId } from "./config";
 import { getFarmBySymbol } from "./farm";
 import { getMultipleAccounts } from "./getMultipleAccounts";
 import {
   findObligationVaultAddress,
   findUserFarmAddress,
 } from "./levFarmUtils";
+import { TOKENS } from "./tokens";
 export const createUserAccounts = async (
   assetSymbol: string,
   obligationIdx: string | number | anchor.BN | Buffer | Uint8Array | number[]

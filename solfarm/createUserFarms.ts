@@ -12,7 +12,6 @@ import {
   getLendingProgramId,
   getOrcaVaultProgramId,
   getVaultProgramId,
-  TOKENS,
 } from "./config";
 import { getFarmBySymbol } from "./farm";
 import { getMultipleAccounts } from "./getMultipleAccounts";
@@ -22,6 +21,7 @@ import {
   findUserFarmAddress,
   findUserFarmObligationAddress,
 } from "./levFarmUtils";
+import { TOKENS } from "./tokens";
 export const createUserFarm = async (
   assetSymbol: string,
   obligationIdx: number
