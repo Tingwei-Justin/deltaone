@@ -18,7 +18,7 @@ export interface Step {
 }
 
 export default function Invest() {
-  const { publicKey, disconnect } = useWallet();
+  const { disconnect, wallet } = useWallet();
   const contributed = false;
   const [selectedInvestmentStrategy, setSelectedInvestmentStrategy] =
     useState<Plan>();
@@ -27,7 +27,7 @@ export default function Invest() {
     {
       id: "01",
       name: "Connect Wallet",
-      status: publicKey ? "complete" : "current",
+      status: wallet ? "complete" : "current",
       onclick: () => {
         disconnect();
         setSelectedInvestmentStrategy(undefined);
@@ -40,11 +40,11 @@ export default function Invest() {
         setSelectedInvestmentStrategy(undefined);
       },
       status:
-        (publicKey &&
+        (wallet &&
           selectedInvestmentStrategy &&
           !contributed &&
           "complete") ||
-        (publicKey && !selectedInvestmentStrategy && !contributed
+        (wallet && !selectedInvestmentStrategy && !contributed
           ? "current"
           : "upcoming"),
     },
@@ -55,7 +55,7 @@ export default function Invest() {
         return;
       },
       status:
-        publicKey && selectedInvestmentStrategy && !contributed
+      wallet && selectedInvestmentStrategy && !contributed
           ? "current"
           : "upcoming",
     },

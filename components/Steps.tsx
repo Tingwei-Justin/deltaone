@@ -7,7 +7,7 @@ export interface StepsProps {
   steps: Step[];
 }
 
-export default function Example({ steps }: StepsProps) {
+export default function Steps({ steps }: StepsProps) {
   return (
     <nav aria-label="Progress" className="mt-10">
       <ol
@@ -63,7 +63,6 @@ export default function Example({ steps }: StepsProps) {
 
             {stepIdx !== steps.length - 1 ? (
               <>
-                {/* Arrow separator for lg screens and up */}
                 <div
                   className="hidden md:block absolute top-0 right-0 h-full w-5"
                   aria-hidden="true"
