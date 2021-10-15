@@ -23,7 +23,7 @@ const Hero = () => {
                   />
                 </a>
                 <h1 className="mt-4 text-4xl tracking-tight font-extrabold text-white sm:mt-5 sm:leading-none lg:mt-6 lg:text-5xl xl:text-6xl">
-                  <span className="md:block">Delta One</span>
+                  <div className="block">Delta One</div>
                   <span className="text-indigo-400 md:block">
                     A Stablecoin with yield. A lot of yield.
                   </span>
