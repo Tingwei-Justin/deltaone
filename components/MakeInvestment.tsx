@@ -1,11 +1,9 @@
 import { RadioGroup } from "@headlessui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { PublicKey } from "@solana/web3.js";
 import axios from "axios";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { connection } from "../config/config";
-import { TOKENS } from "../utils/tokens";
 
 import { USDollarFormatter } from "../utils/utils";
 import { getUSDCBalance } from "../utils/wallet";
