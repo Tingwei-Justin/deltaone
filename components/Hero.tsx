@@ -57,7 +57,7 @@ const Hero = () => {
         </dd>
       </div>
       <div className="flex flex-col mt-10 sm:mt-0">
-        <dt className="order-2 mt-2 text-lg leading-6 font-medium text-indigo-400">
+        <dt className="order-2 mt-2 text-lg leading-6 font-medium text-yellow-400 uppercase">
           Yield per day
         </dt>
         <dd className="order-1 text-5xl font-extrabold text-yellow-400">
