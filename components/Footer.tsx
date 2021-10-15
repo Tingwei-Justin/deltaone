@@ -65,7 +65,7 @@ export default function Example() {
                 type="submit"
                 className="w-full bg-indigo-500 border border-transparent rounded-md py-2 px-4 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500"
               >
-                <a target="__blank" href="https://discord.gg/hWtau9h6mt">
+                <a target="__blank" href="https://discord.gg/qEaGFrRdCC">
                   Join Discord
                 </a>
               </button>

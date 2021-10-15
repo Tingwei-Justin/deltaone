@@ -84,7 +84,7 @@ const Header = () => {
                 ))}
                 <a
                   target="__blank"
-                  href="https://discord.gg/pSKG5X8s"
+                  href="https://discord.gg/qEaGFrRdCC"
                   className="font-medium text-white hover:text-gray-300"
                 >
                   Discord
