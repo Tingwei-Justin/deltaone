@@ -10,7 +10,7 @@ const Hero = () => {
               <div>
                 <a
                   target="__blank"
-                  href="https://discord.gg/pSKG5X8s"
+                  href="https://discord.gg/qEaGFrRdCC"
                   className="inline-flex items-center text-white bg-gray-900 rounded-full p-1 pr-2 sm:text-base lg:text-sm xl:text-base hover:text-gray-200"
                 >
                   <span className="px-3 py-0.5 text-white text-xs font-semibold leading-5 uppercase tracking-wide bg-indigo-500 rounded-full">
@@ -156,9 +156,6 @@ const Hero = () => {
                     <div className="col-span-1 flex justify-center py-8 px-8 bg-gray-50">
                       <img className="max-h-12" src="https://tulip.garden/static/media/tulip.be0a265d.svg" alt="Tulip Protocol"/>
                     </div>
-                    {/* <div className="ml-4 col-span-1 flex justify-center py-8 px-8 bg-gray-50">
-                      <img className="max-h-12" src="https://pbs.twimg.com/profile_images/1437360622144983043/Mk6wM8dM_400x400.jpg" alt="Francium"/>
-                    </div> */}
                 </div>
                 </div>
 
