@@ -19,6 +19,7 @@
     "@solana/web3.js": "^1.29.2",
     "axios": "^0.23.0",
     "buffer-layout": "^1.2.2",
+    "classnames": "^2.3.1",
     "daisyui": "^1.14.2",
     "lodash": "^4.17.21",
     "next": "^11.1.2",
