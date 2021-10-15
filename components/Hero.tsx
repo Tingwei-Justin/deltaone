@@ -23,7 +23,7 @@ const Hero = () => {
                   />
                 </a>
                 <h1 className="mt-4 text-4xl tracking-tight font-extrabold text-white sm:mt-5 sm:leading-none lg:mt-6 lg:text-5xl xl:text-6xl">
-                  <span className="md:block">Delta One</span>{" "}
+                  <span className="md:block">Delta One</span>
                   <span className="text-indigo-400 md:block">
                     A Stablecoin with some extra juice.
                   </span>
@@ -31,15 +31,29 @@ const Hero = () => {
                 <p className="mt-3 text-base text-gray-300 sm:mt-5 sm:text-xl lg:text-lg xl:text-xl">
                   Delta one is a stablecoin which earns yield. It gives access to high DeFi yields through a continuously optimised portfolio of strategies.
                 </p>
+                <p className="mt-8 text-sm text-indigo-400 uppercase tracking-wide font-semibold sm:mt-10">
+                  Used by: 292 Solana Wallets.
+                </p>
                 <p className="mt-8 text-sm text-white tracking-wide font-semibold sm:mt-10">
                   Delta One returns are higher because they are leveraged using assets. 
                   The protocol uses delta hedging so losses are covered. 
                   Delta One is a stablecoin protocol and the risks are primarily smart contract and stablecoin risks, rather than price volatility.
 
                 </p>
-                <p className="mt-8 text-sm text-indigo-400 uppercase tracking-wide font-semibold sm:mt-10">
-                  Used by: 292 Solana Wallets.
+                <p className="mt-8 text-sm text-white uppercase tracking-wide font-semibold sm:mt-10">
+                   Built on the best leverage yield farms on Solana
                 </p>
+                <p className="text-sm text-indigo-400 uppercase tracking-wide font-semibold">
+                   Tulip Protocol and Francium.
+                </p>
+                  <div className="flex flex-row mt-4">
+                    <div className="col-span-1 flex justify-center py-8 px-8 bg-gray-50">
+                      <img className="max-h-12" src="https://tulip.garden/static/media/tulip.be0a265d.svg" alt="Tulip Protocol"/>
+                    </div>
+                    <div className="ml-4 col-span-1 flex justify-center py-8 px-8 bg-gray-50">
+                      <img className="max-h-12" src="https://pbs.twimg.com/profile_images/1437360622144983043/Mk6wM8dM_400x400.jpg" alt="Francium"/>
+                    </div>
+                </div>
               </div>
             </div>
           </div>
