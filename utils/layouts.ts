@@ -1,14 +1,7 @@
-import {
-  blob,
-  bool,
-  publicKey,
-  struct,
-  u8,
-  u32,
-  u64,
-  u128,
-} from "buffer-layout";
-import * as BufferLayout from "buffer-layout";
+import { bool, publicKey, u32, u64, u8, u128, struct } from '@project-serum/borsh'
+import {blob} from "buffer-layout"
+import BufferLayout from "buffer-layout"
+
 
 export const ACCOUNT_LAYOUT = struct([
   publicKey("mint"),

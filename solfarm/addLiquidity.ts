@@ -25,7 +25,7 @@ import {
   findUserFarmManagerAddress,
   findUserFarmObligationAddress,
 } from "./levFarmUtils";
-import { TOKENS } from "./tokens";
+import { TOKENS } from "../utils/tokens";
 export const addLiquidity = async (
   assetSymbol: any,
   reserveName: any,

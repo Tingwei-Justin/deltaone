@@ -1,9 +1,7 @@
 /* This example requires Tailwind CSS v2.0+ */
 import { RadioGroup } from "@headlessui/react";
-import { useWallet } from "@solana/wallet-adapter-react";
 import { Dispatch, SetStateAction } from "react";
 
-import { connection } from "../config/config";
 import PortfolioChoice from "./PortfolioChoice";
 
 export interface Plan {
@@ -48,17 +46,6 @@ export default function PickInvestmentStrategy({
   selectedInvestmentStrategy,
   setInvestmentStrategy,
 }: PickInvestmentStrategyProps) {
-  const { publicKey } = useWallet();
-  if (publicKey) {
-    const balance = connection
-      .getBalance(publicKey)
-      .then((data) => console.log("balance", data));
-    console.log("balance", balance);
-    const tokenAccounts = connection
-      .getAccountInfo(publicKey)
-      .then((data) => console.log("tokenaccounts", data));
-    console.log("tokenAccounts", tokenAccounts);
-  }
 
   return (
     <RadioGroup

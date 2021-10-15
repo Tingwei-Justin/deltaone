@@ -1,8 +1,13 @@
 import { RadioGroup } from "@headlessui/react";
-import React from "react";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { PublicKey } from "@solana/web3.js";
+import React, { useEffect } from "react";
 import { useState } from "react";
+import { connection } from "../config/config";
+import { TOKENS } from "../utils/tokens";
 
 import { USDollarFormatter } from "../utils/utils";
+import { getUSDCBalance } from "../utils/wallet";
 import { PickInvestmentStrategyProps } from "./PickInvestmentStrategy";
 import PortfolioChoice from "./PortfolioChoice";
 
@@ -11,7 +16,30 @@ const MakeInvestment = ({
   setInvestmentStrategy,
 }: PickInvestmentStrategyProps) => {
   const [contributionPercentage, setContributionPercentage] = useState(75);
+  const [walletConnected, setWalletConnected] = useState(false)
+  const [usdcBalance, setUSDCBalance] = useState<number>(0);
+  const {  publicKey} = useWallet();
+
   const slippage = 0.01;
+
+  useEffect(()=> {
+    async function initialize() {
+      try {
+          console.log('publicKey', publicKey)
+        if(publicKey){
+          const balance = await getUSDCBalance(connection, publicKey);
+          console.log('balance', usdcBalance)
+          setUSDCBalance(balance);
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+      }
+    }
+    initialize()
+
+  }, [publicKey, connection])
+
 
   return (
     <>
@@ -69,7 +97,7 @@ const MakeInvestment = ({
                       <div>
                         <dd className="font-medium text-3xl text-gray-900">
                           {USDollarFormatter.format(
-                            262.0 * (contributionPercentage / 100)
+                            usdcBalance * (contributionPercentage / 100)
                           )}
                         </dd>
                         <input
@@ -77,7 +105,6 @@ const MakeInvestment = ({
                           max="100"
                           defaultValue={contributionPercentage}
                           onChange={(event) => {
-                            console.log("percentage", event.target.value);
                             setContributionPercentage(
                               parseInt(event.target.value)
                             );

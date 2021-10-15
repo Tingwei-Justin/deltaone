@@ -6,7 +6,7 @@ import {
   AMM_INFO_LAYOUT_V4,
   STAKE_INFO_LAYOUT,
   STAKE_INFO_LAYOUT_V4,
-} from "./layouts";
+} from "../utils/layouts";
 import { LENDING_RESERVES } from "./lendingReserves";
 const config = require("../idl/info.json");
 const lendConfig = require("../idl/lending_info.json");

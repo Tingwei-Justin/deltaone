@@ -1,5 +1,5 @@
 import { FARM_PLATFORMS } from "./config";
-import {NATIVE_SOL, TOKENS} from "./tokens"
+import {NATIVE_SOL, TOKENS} from "../utils/tokens"
 import {find} from "lodash"
 export const FARMS = [
   {
