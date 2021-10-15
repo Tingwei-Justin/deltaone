@@ -61,7 +61,7 @@ const Hero = () => {
           Yield per day
         </dt>
         <dd className="order-1 text-5xl font-extrabold text-yellow-400">
-          1%
+          1%+
         </dd>
       </div>
       <div className="flex flex-col mt-10 sm:mt-0">
