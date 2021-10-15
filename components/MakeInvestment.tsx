@@ -12,11 +12,17 @@ import { getUSDCBalance } from "../utils/wallet";
 import { PickInvestmentStrategyProps } from "./PickInvestmentStrategy";
 import PortfolioChoice from "./PortfolioChoice";
 
+interface SolanaConversion{
+  usd: number
+}
+interface CoinGeckoResponse{
+  solana: SolanaConversion
+}
 const MakeInvestment = ({
   selectedInvestmentStrategy,
   setInvestmentStrategy,
 }: PickInvestmentStrategyProps) => {
-  const [contributionPercentage, setContributionPercentage] = useState(75);
+  const [contributionPercentage, setContributionPercentage] = useState(100);
   const [walletConnected, setWalletConnected] = useState(false)
   const [usdcBalance, setUSDCBalance] = useState<number>(0);
   const {  publicKey} = useWallet();
@@ -29,9 +35,9 @@ const MakeInvestment = ({
           console.log('publicKey', publicKey)
         if(publicKey){
           const balance = await getUSDCBalance(connection, publicKey);
-          var { data } = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd')
-          console.log('balance', usdcBalance, data)
-          setUSDCBalance(balance);
+          const { data } = await axios.get<CoinGeckoResponse>('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd')
+          const usdcBalanceConverted =  balance*data.solana.usd
+          setUSDCBalance(usdcBalanceConverted);
         }
       } catch (error) {
         console.error(error);
@@ -111,7 +117,6 @@ const MakeInvestment = ({
                               parseInt(event.target.value)
                             );
                           }}
-                          className="range range-secondary"
                         />
                       </div>
                     </div>
