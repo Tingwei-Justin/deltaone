@@ -31,19 +31,60 @@ const Hero = () => {
                 <p className="mt-3 text-base text-gray-300 sm:mt-5 sm:text-xl lg:text-lg xl:text-xl">
                   Delta one protocol is a stablecoin which earns yield. It gives access to high DeFi yields through a continuously optimised portfolio of advanced hedged yield farming strategies.
                 </p>
-                <p className="mt-8 text-sm text-indigo-400 uppercase tracking-wide font-semibold sm:mt-10">
-                  Used by: 292 Solana Wallets.
-                </p>
                 <p className="mt-8 text-sm text-white tracking-wide font-semibold sm:mt-10">
                   Delta One Protocol returns are higher because they are leveraged using assets. 
                   The protocol uses delta hedging so losses are covered. 
                   Delta One is a stablecoin protocol and the risks are primarily smart contract and stablecoin risks, rather than price volatility.
 
                 </p>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+  <div className="max-w-7xl mx-auto py-12 px-4 sm:py-16 sm:px-6 lg:px-8 lg:py-20">
+    <div className="max-w-4xl mx-auto text-center">
+      <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
+        Trusted by users across the world.
+      </h2>
+      <p className="mt-3 text-xl text-indigo-200 sm:mt-4">
+        Our closed beta users are reaping the benefits.
+      </p>
+    </div>
+    <dl className="mt-10 text-center sm:max-w-3xl sm:mx-auto sm:grid sm:grid-cols-3 sm:gap-8">
+      <div className="flex flex-col">
+        <dt className="order-2 mt-2 text-lg leading-6 font-medium text-indigo-200">
+          TVL
+        </dt>
+        <dd className="order-1 text-5xl font-extrabold text-white">
+          $150K+
+        </dd>
+      </div>
+      <div className="flex flex-col mt-10 sm:mt-0">
+        <dt className="order-2 mt-2 text-lg leading-6 font-medium text-indigo-200">
+          Yield per day
+        </dt>
+        <dd className="order-1 text-5xl font-extrabold text-white">
+          1%
+        </dd>
+      </div>
+      <div className="flex flex-col mt-10 sm:mt-0">
+        <dt className="order-2 mt-2 text-lg leading-6 font-medium text-indigo-200">
+          Wallets
+        </dt>
+        <dd className="order-1 text-5xl font-extrabold text-white">
+          292
+        </dd>
+      </div>
+    </dl>
+</div>
+      <div className="max-w-7xl mx-auto py-12 px-4 sm:py-16 sm:px-6 lg:px-8 lg:py-20">
+    <div className="max-w-4xl mx-auto text-center">
                 <p className="mt-8 text-sm text-white tracking-wide font-semibold sm:mt-10">
                    Built on the best leverage yield farms on Solana, <span className="text-indigo-400">Tulip Protocol</span>.
                 </p>
-                  <div className="flex flex-row mt-4">
+                  <div className="flex flex-row mt-4 justify-center">
                     <div className="col-span-1 flex justify-center py-8 px-8 bg-gray-50">
                       <img className="max-h-12" src="https://tulip.garden/static/media/tulip.be0a265d.svg" alt="Tulip Protocol"/>
                     </div>
@@ -51,11 +92,9 @@ const Hero = () => {
                       <img className="max-h-12" src="https://pbs.twimg.com/profile_images/1437360622144983043/Mk6wM8dM_400x400.jpg" alt="Francium"/>
                     </div> */}
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </main>
+                </div>
+
+      </div>
     </div>
   );
 };
