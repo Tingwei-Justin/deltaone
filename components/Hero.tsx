@@ -16,7 +16,7 @@ const Hero = () => {
                   <span className="px-3 py-0.5 text-white text-xs font-semibold leading-5 uppercase tracking-wide bg-indigo-500 rounded-full">
                     Let's Go
                   </span>
-                  <span className="ml-4 text-sm">Join our Discord</span>
+                  <span className="ml-4 text-sm">Join our Discord to be a Beta User</span>
                   <ChevronRightIcon
                     className="ml-2 w-5 h-5 text-gray-500"
                     aria-hidden="true"
