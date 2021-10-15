@@ -29,9 +29,15 @@ const Hero = () => {
                   </span>
                 </h1>
                 <p className="mt-3 text-base text-gray-300 sm:mt-5 sm:text-xl lg:text-lg xl:text-xl">
-                  Use advanced delta neutral hedging strategies to earn high APYs. Making you money while you sleep.
+                  Delta one is a stablecoin which earns yield. It gives access to high DeFi yields through a continuously optimised portfolio of strategies.
                 </p>
-                <p className="mt-8 text-sm text-white uppercase tracking-wide font-semibold sm:mt-10">
+                <p className="mt-8 text-sm text-white tracking-wide font-semibold sm:mt-10">
+                  Delta One returns are higher because they are leveraged using assets. 
+                  The protocol uses delta hedging so losses are covered. 
+                  Delta One is a stablecoin protocol and the risks are primarily smart contract and stablecoin risks, rather than price volatility.
+
+                </p>
+                <p className="mt-8 text-sm text-indigo-400 uppercase tracking-wide font-semibold sm:mt-10">
                   Used by: 292 Solana Wallets.
                 </p>
               </div>
