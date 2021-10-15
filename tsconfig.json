@@ -19,5 +19,5 @@
     "**/*.ts",
     "**/*.tsx",
   ],
-  "exclude": ["node_modules", "solfarm", "utils/layouts.ts" ]
+  "exclude": ["node_modules", "solfarm" ]
 }
