@@ -98,10 +98,17 @@ const Header = () => {
                 </a>
                 <a
                   target="__blank"
-                  href="https://deltaone.gitbook.io/delta-one/"
+                  href="https://delta-one.gitbook.io/delta-one/"
                   className="font-medium text-white hover:text-gray-300"
                 >
                   Docs
+                </a>
+                <a
+                  target="__blank"
+                  href="https://github.com/Delta-One-Protocol/deltaone/"
+                  className="font-medium text-white hover:text-gray-300"
+                >
+                  Github
                 </a>
               </div>
             </div>
