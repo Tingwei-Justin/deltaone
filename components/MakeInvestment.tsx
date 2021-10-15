@@ -30,7 +30,7 @@ const MakeInvestment = ({
         if(publicKey){
           const balance = await getUSDCBalance(connection, publicKey);
           var { data } = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd')
-          console.log('balance', usdcBalance)
+          console.log('balance', usdcBalance, data)
           setUSDCBalance(balance);
         }
       } catch (error) {

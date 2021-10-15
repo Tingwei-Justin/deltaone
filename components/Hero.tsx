@@ -29,7 +29,7 @@ const Hero = () => {
                   </span>
                 </h1>
                 <p className="mt-3 text-base text-gray-300 sm:mt-5 sm:text-xl lg:text-lg xl:text-xl">
-                Delta One is a stable coin that allows holders to easily earn high APY from delta neutral yield farming by simply holding the coin.
+                Delta One is a stablecoin that allows holders to easily earn high APY from low-risk delta neutral yield farming techniques.
                 </p>
 
               </div>
