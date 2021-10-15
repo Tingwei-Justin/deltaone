@@ -123,7 +123,7 @@ const MakeInvestment = ({
                       </dt>
                       <dd className="text-base font-medium text-gray-900">
                         {USDollarFormatter.format(
-                          262.0 *
+                          usdcBalance *
                             (contributionPercentage / 100) *
                             (1 - slippage)
                         )}
