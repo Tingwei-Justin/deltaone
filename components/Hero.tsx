@@ -40,19 +40,16 @@ const Hero = () => {
                   Delta One is a stablecoin protocol and the risks are primarily smart contract and stablecoin risks, rather than price volatility.
 
                 </p>
-                <p className="mt-8 text-sm text-white uppercase tracking-wide font-semibold sm:mt-10">
-                   Built on the best leverage yield farms on Solana
-                </p>
-                <p className="text-sm text-indigo-400 uppercase tracking-wide font-semibold">
-                   Tulip Protocol and Francium.
+                <p className="mt-8 text-sm text-white tracking-wide font-semibold sm:mt-10">
+                   Built on the best leverage yield farms on Solana, <span className="text-indigo-400">Tulip Protocol</span>.
                 </p>
                   <div className="flex flex-row mt-4">
                     <div className="col-span-1 flex justify-center py-8 px-8 bg-gray-50">
                       <img className="max-h-12" src="https://tulip.garden/static/media/tulip.be0a265d.svg" alt="Tulip Protocol"/>
                     </div>
-                    <div className="ml-4 col-span-1 flex justify-center py-8 px-8 bg-gray-50">
+                    {/* <div className="ml-4 col-span-1 flex justify-center py-8 px-8 bg-gray-50">
                       <img className="max-h-12" src="https://pbs.twimg.com/profile_images/1437360622144983043/Mk6wM8dM_400x400.jpg" alt="Francium"/>
-                    </div>
+                    </div> */}
                 </div>
               </div>
             </div>
