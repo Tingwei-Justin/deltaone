@@ -45,7 +45,7 @@ const Hero = () => {
         A better way to hold your money.
       </p>
       <p className="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
-      Delta One Protocol returns are higher because they are leveraged using assets. 
+      Delta One Protocol returns are higher than anything you have seen because they are leveraged using assets.
       </p>
     </div>
 
