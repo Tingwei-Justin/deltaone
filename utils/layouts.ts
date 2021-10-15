@@ -1,5 +1,7 @@
 import { bool, publicKey, u32, u64, u8, u128, struct } from '@project-serum/borsh'
+// @ts-ignore: no types
 import {blob} from "buffer-layout"
+// @ts-ignore: no types
 import BufferLayout from "buffer-layout"
 
 
