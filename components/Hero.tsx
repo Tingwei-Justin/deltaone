@@ -29,7 +29,7 @@ const Hero = () => {
                   </span>
                 </h1>
                 <p className="mt-3 text-base text-gray-300 sm:mt-5 sm:text-xl lg:text-lg xl:text-xl">
-                  Delta one protocol is a stablecoin which earns yield. It gives access to high DeFi yields through a continuously optimised portfolio of advanced hedged yield farming strategies.
+                  Delta one protocol is a stablecoin which earns yield. It gives access to high DeFi yields to its token holders while hedging directional price risk.
                 </p>
 
               </div>
