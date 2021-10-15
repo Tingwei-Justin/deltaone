@@ -14,10 +14,9 @@ export const getUSDCBalance = async (connection: Connection, publicKey: PublicKe
   );
 
   let sum = 0;
-  console.log(value)
   for (const { account } of value) {
     console.log(account)
-    sum += account.lamports ;
+    sum += account.lamports / LAMPORTS_PER_SOL;
   }
 
   return sum;
