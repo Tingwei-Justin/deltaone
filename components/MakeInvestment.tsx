@@ -16,10 +16,7 @@ interface SolanaConversion{
 interface CoinGeckoResponse{
   solana: SolanaConversion
 }
-const MakeInvestment = ({
-  selectedInvestmentStrategy,
-  setInvestmentStrategy,
-}: PickInvestmentStrategyProps) => {
+const MakeInvestment = () => {
   const [contributionPercentage, setContributionPercentage] = useState(100);
   const [walletConnected, setWalletConnected] = useState(false)
   const [usdcBalance, setUSDCBalance] = useState<number>(0);

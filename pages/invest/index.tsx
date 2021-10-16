@@ -5,9 +5,6 @@ import ConnectWalletEmptyState from "../../components/ConnectWalletEmptyState";
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
 import MakeInvestment from "../../components/MakeInvestment";
-import PickInvestmentStrategy, {
-  Plan,
-} from "../../components/PickInvestmentStrategy";
 import Steps from "../../components/Steps";
 
 export interface Step {
@@ -20,9 +17,6 @@ export interface Step {
 export default function Invest() {
   const { disconnect, wallet } = useWallet();
   const contributed = false;
-  const [selectedInvestmentStrategy, setSelectedInvestmentStrategy] =
-    useState<Plan>();
-
   const steps = [
     {
       id: "01",
@@ -30,24 +24,8 @@ export default function Invest() {
       status: wallet ? "complete" : "current",
       onclick: () => {
         disconnect();
-        setSelectedInvestmentStrategy(undefined);
       },
     },
-    // {
-    //   id: "02",
-    //   name: "Pick Investment Strategy",
-    //   onclick: () => {
-    //     setSelectedInvestmentStrategy(undefined);
-    //   },
-    //   status:
-    //     (wallet &&
-    //       selectedInvestmentStrategy &&
-    //       !contributed &&
-    //       "complete") ||
-    //     (wallet && !selectedInvestmentStrategy && !contributed
-    //       ? "current"
-    //       : "upcoming"),
-    // },
     {
       id: "02",
       name: "Start Investing",
@@ -82,19 +60,8 @@ export default function Invest() {
                   <ConnectWalletEmptyState />
                 </div>
               )}
-              {/* {steps[1].status === "current" && (
-                <div className="mt-10 w-96 mx-auto">
-                  <PickInvestmentStrategy
-                    selectedInvestmentStrategy={selectedInvestmentStrategy}
-                    setInvestmentStrategy={setSelectedInvestmentStrategy}
-                  />
-                </div>
-              )} */}
               {steps[1].status === "current" && (
-                <MakeInvestment
-                  selectedInvestmentStrategy={selectedInvestmentStrategy}
-                  setInvestmentStrategy={setSelectedInvestmentStrategy}
-                />
+                <MakeInvestment />
               )}
             </div>
           </div>
