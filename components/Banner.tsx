@@ -15,7 +15,7 @@ const Banner = ()=> {
         </span>
         <p className="ml-3 font-medium text-white truncate">
           <span className="hidden md:inline">
-            Big news! We're excited to announce we are launching Delta One Protocol to the public Nov 15th!
+            Big news! We're launching Delta One Protocol to the public Nov 15th!
           </span>
         </p>
       </div>
