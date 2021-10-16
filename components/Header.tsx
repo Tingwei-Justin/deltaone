@@ -139,6 +139,13 @@ const Header = () => {
                 >
                   Github
                 </a>
+                <a
+                  target="__blank"
+                  href="https://www.figma.com/file/M1lAIedGUy3rV13HHlJ99Y/Delta-One?node-id=390%3A722"
+                  className="font-medium text-white hover:text-gray-300"
+                >
+                  How it works
+                </a>
               </div>
             </div>
             <ConnectWalletButton />
