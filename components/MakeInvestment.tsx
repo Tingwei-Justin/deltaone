@@ -6,7 +6,7 @@ import { useState } from "react";
 import { connection } from "../config/config";
 
 import { USDollarFormatter } from "../utils/utils";
-import { getUSDCBalance } from "../utils/wallet";
+import { getSOLBalance, getUSDCBalance } from "../utils/wallet";
 import { PickInvestmentStrategyProps } from "./PickInvestmentStrategy";
 import PortfolioChoice from "./PortfolioChoice";
 
@@ -32,7 +32,7 @@ const MakeInvestment = ({
       try {
           console.log('publicKey', publicKey)
         if(publicKey){
-          const balance = await getUSDCBalance(connection, publicKey);
+          const balance = await getSOLBalance(connection, publicKey);
           const { data } = await axios.get<CoinGeckoResponse>('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd')
           const usdcBalanceConverted =  balance*data.solana.usd
           setUSDCBalance(usdcBalanceConverted);
@@ -97,7 +97,7 @@ const MakeInvestment = ({
                       <div>
                         <dt className="text-gray-600">Investment Amount</dt>
                         <dt className="text-gray-600 text-2xs">
-                          (Based on USDC in your wallet)
+                          (Based on SOL in your wallet)
                         </dt>
                       </div>
                       <div>
