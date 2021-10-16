@@ -30,7 +30,6 @@ const MakeInvestment = ({
   useEffect(()=> {
     async function initialize() {
       try {
-          console.log('publicKey', publicKey)
         if(publicKey){
           const balance = await getSOLBalance(connection, publicKey);
           const { data } = await axios.get<CoinGeckoResponse>('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd')
