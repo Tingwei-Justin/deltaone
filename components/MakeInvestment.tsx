@@ -6,9 +6,7 @@ import { useState } from "react";
 import { connection } from "../config/config";
 
 import { USDollarFormatter } from "../utils/utils";
-import { getSOLBalance, getUSDCBalance } from "../utils/wallet";
-import { PickInvestmentStrategyProps } from "./PickInvestmentStrategy";
-import PortfolioChoice from "./PortfolioChoice";
+import { getSOLBalance } from "../utils/wallet";
 
 interface SolanaConversion{
   usd: number
@@ -18,7 +16,6 @@ interface CoinGeckoResponse{
 }
 const MakeInvestment = () => {
   const [contributionPercentage, setContributionPercentage] = useState(100);
-  const [walletConnected, setWalletConnected] = useState(false)
   const [usdcBalance, setUSDCBalance] = useState<number>(0);
   const {  publicKey} = useWallet();
 
@@ -63,20 +60,6 @@ const MakeInvestment = () => {
                 Review Investment
               </h2>
             </div>
-
-            {/* <section aria-labelledby="cart-heading" className="my-10">
-              <div className="w-96 mx-auto">
-                <RadioGroup
-                  // value={selectedInvestmentStrategy}
-                  onChange={setInvestmentStrategy}
-                >
-                  <PortfolioChoice
-                    plan={selectedInvestmentStrategy}
-                    checked={true}
-                  />
-                </RadioGroup>
-              </div>
-            </section> */}
 
             <section
               aria-labelledby="summary-heading"

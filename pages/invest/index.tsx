@@ -1,5 +1,5 @@
 import { useWallet } from "@solana/wallet-adapter-react";
-import React, { useState } from "react";
+import React from "react";
 
 import ConnectWalletEmptyState from "../../components/ConnectWalletEmptyState";
 import Footer from "../../components/Footer";
