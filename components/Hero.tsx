@@ -150,7 +150,7 @@ const Hero = () => {
       <div className="max-w-7xl mx-auto py-12 px-4 sm:py-16 sm:px-6 lg:px-8 lg:py-20">
     <div className="max-w-4xl mx-auto text-center">
                 <p className="mt-8 text-sm text-white tracking-wide font-semibold sm:mt-10">
-                   Built on the best leverage yield farms on Solana, <span className="text-indigo-400">Tulip Protocol</span>.
+                   Built on leverage yield farm on Solana, <span className="text-indigo-400">Tulip Protocol</span>.
                 </p>
                   <div className="flex flex-row mt-4 justify-center">
                     <div className="col-span-1 flex justify-center py-8 px-8 bg-gray-50">
