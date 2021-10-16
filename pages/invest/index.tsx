@@ -33,29 +33,29 @@ export default function Invest() {
         setSelectedInvestmentStrategy(undefined);
       },
     },
+    // {
+    //   id: "02",
+    //   name: "Pick Investment Strategy",
+    //   onclick: () => {
+    //     setSelectedInvestmentStrategy(undefined);
+    //   },
+    //   status:
+    //     (wallet &&
+    //       selectedInvestmentStrategy &&
+    //       !contributed &&
+    //       "complete") ||
+    //     (wallet && !selectedInvestmentStrategy && !contributed
+    //       ? "current"
+    //       : "upcoming"),
+    // },
     {
       id: "02",
-      name: "Pick Investment Strategy",
-      onclick: () => {
-        setSelectedInvestmentStrategy(undefined);
-      },
-      status:
-        (wallet &&
-          selectedInvestmentStrategy &&
-          !contributed &&
-          "complete") ||
-        (wallet && !selectedInvestmentStrategy && !contributed
-          ? "current"
-          : "upcoming"),
-    },
-    {
-      id: "03",
       name: "Start Investing",
       onclick: () => {
         return;
       },
       status:
-      wallet && selectedInvestmentStrategy && !contributed
+      wallet && !contributed
           ? "current"
           : "upcoming",
     },
@@ -82,15 +82,15 @@ export default function Invest() {
                   <ConnectWalletEmptyState />
                 </div>
               )}
-              {steps[1].status === "current" && (
+              {/* {steps[1].status === "current" && (
                 <div className="mt-10 w-96 mx-auto">
                   <PickInvestmentStrategy
                     selectedInvestmentStrategy={selectedInvestmentStrategy}
                     setInvestmentStrategy={setSelectedInvestmentStrategy}
                   />
                 </div>
-              )}
-              {steps[2].status === "current" && (
+              )} */}
+              {steps[1].status === "current" && (
                 <MakeInvestment
                   selectedInvestmentStrategy={selectedInvestmentStrategy}
                   setInvestmentStrategy={setSelectedInvestmentStrategy}
