@@ -187,6 +187,7 @@ export default class MarginService{
   // Address of the deployed program.
   const farmProgramId = new anchor.web3.PublicKey(getLendingFarmProgramId());
   // Generate the program client from IDL.
+  // @ts-ignore
   const farmProgram = new anchor.Program(farmIdl, farmProgramId);
 
   const solfarmVaultProgramId = new anchor.web3.PublicKey(
@@ -380,6 +381,7 @@ export default class MarginService{
   // Address of the deployed program.
   const farmProgramId = new anchor.web3.PublicKey(getLendingFarmProgramId());
   // Generate the program client from IDL.
+  // @ts-ignore
   const farmProgram = new anchor.Program(farmIdl, farmProgramId);
 
   const solfarmVaultProgramId = new anchor.web3.PublicKey(
@@ -787,6 +789,7 @@ depositMarginLpTokens = async (
   // Address of the deployed program.
   const vaultProgramId = new anchor.web3.PublicKey(getLendingFarmProgramId());
   // Generate the program client from IDL.
+  // @ts-ignore
   const vaultProgram = new anchor.Program(farmIdl, vaultProgramId);
 
   const farm = getFarmBySymbol(assetSymbol),
@@ -1144,6 +1147,7 @@ depositMarginLpTokens = async (
   // Address of the deployed program.
   const vaultProgramId = new anchor.web3.PublicKey(getLendingFarmProgramId());
   // Generate the program client from IDL.
+  // @ts-ignore
   const vaultProgram = new anchor.Program(farmIdl, vaultProgramId);
 
   const farm = getFarmBySymbol(assetSymbol);
@@ -1328,6 +1332,7 @@ depositMarginLpTokens = async (
   // Address of the deployed program.
   const vaultProgramId = new anchor.web3.PublicKey(getLendingFarmProgramId());
   // Generate the program client from IDL.
+  // @ts-ignore
   const vaultProgram = new anchor.Program(farmIdl, vaultProgramId);
 
   const farm = getFarmBySymbol(assetSymbol);
