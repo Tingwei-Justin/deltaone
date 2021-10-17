@@ -1,5 +1,5 @@
 import { observable, makeObservable, action,  } from 'mobx';
-import { isNil,  assign,  map, get, } from 'lodash';
+import { isNil,  assign,  map,  } from 'lodash';
 import * as anchor from '@project-serum/anchor';
 import { MARKET_STATE_LAYOUT_V2 as  _MARKET_STATE_LAYOUT_V2,  OpenOrders } from '@project-serum/serum/lib/market.js';
 import * as web3js from "@solana/web3.js";
@@ -7,7 +7,6 @@ import { FARMS } from '../farm';
 import { MINT_LAYOUT, VAULT_LAYOUT, ACCOUNT_LAYOUT, GLOBAL_FARM_DATA_LAYOUT } from '../../utils/layouts';
 import { TOKENS } from '../../utils/tokens';
 import { getOrcaVaultProgramId, getVaultAccount, getFarmPoolId, getFarmPoolLpTokenAccount, getFarmPoolCoinTokenaccount, getFarmPoolPcTokenaccount, getFarmAmmId, getFarmAmmOpenOrders, getOrcaVaultAccount, getOrcaFarmPoolCoinTokenaccount, getOrcaFarmPoolPcTokenaccount, getOrcaVaultGlobalFarm, getVaultStakeLayout, isVersionFourOrFive, getVaultAmmLayout, getFarmSerumProgramId, FARM_PLATFORMS, isSupportedLendingFarm } from '../config';
-import { GetMultipleAccountsAndContextRpcResult } from '../multipleAccount';
 
 const NUMBER_OF_PERIODS_IN_A_WEEK = 24 * 7,
   NUMBER_OF_PERIODS_IN_A_YEAR = 24 * 365;
@@ -75,6 +74,7 @@ export default class FarmStore {
       signAllTransactions: () => {},
       publicKey: new anchor.web3.Account().publicKey
     };
+    // @ts-ignore
     const provider = new anchor.Provider(this.web3, walletToInitialize, { skipPreflight: true });
 
 

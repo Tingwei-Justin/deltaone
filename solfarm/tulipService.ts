@@ -137,18 +137,18 @@ export default class MarginService{
     }
 
     if (obligationProgress > 0 && obligationProgress < 3) {
-        transactions.push(this.swapTokens(assetSymbol, reserveName, obligationIdx));
+        transactions.push(this.swapTokens(assetSymbol, obligationIdx));
         extraSigners.push([]);
     }
 
     if (obligationProgress > 0 && obligationProgress < 4) {
-        transactions.push(this.addLiquidity(assetSymbol, reserveName, obligationIdx));
+        transactions.push(this.addLiquidity(assetSymbol,  obligationIdx));
         extraSigners.push([]);
     }
 
     if (obligationProgress > 0 && obligationProgress < 5) {
         transactions.push(
-        this.depositMarginLpTokens(assetSymbol, reserveName, obligationIdx)
+        this.depositMarginLpTokens(assetSymbol,  obligationIdx)
         );
         extraSigners.push([]);
     }
@@ -261,73 +261,6 @@ export default class MarginService{
         provider.wallet.publicKey,
         obligationVaultAccount,
         tulipTokenMint
-      )
-    );
-  }
-
-  if (
-    baseToken.symbol !== "SOL" &&
-    !isMintAddressExisting(baseToken.mintAddress)
-  ) {
-    instructions.push(
-      await serumAssoToken.createAssociatedTokenAccount(
-        // who will pay for the account creation
-        wallet.publicKey,
-
-        // who is the account getting created for
-        wallet.publicKey,
-
-        // what mint address token is being created
-        new anchor.web3.PublicKey(baseToken.mintAddress)
-      )
-    );
-  }
-
-  if (
-    quoteToken.symbol !== "SOL" &&
-    !isMintAddressExisting(quoteToken.mintAddress)
-  ) {
-    instructions.push(
-      await serumAssoToken.createAssociatedTokenAccount(
-        // who will pay for the account creation
-        wallet.publicKey,
-
-        // who is the account getting created for
-        wallet.publicKey,
-
-        // what mint address token is being created
-        new anchor.web3.PublicKey(quoteToken.mintAddress)
-      )
-    );
-  }
-
-  const tulipTokenAccount =
-    tokenAccounts[TOKENS.TULIP.mintAddress]?.tokenAccountAddress;
-  const derivedTulipTokenAccount = await createAssociatedTokenAccount(
-    provider,
-    provider.wallet.publicKey,
-    new anchor.web3.PublicKey(TOKENS.TULIP.mintAddress)
-  );
-  const isTulipAssociatedAddress =
-    tulipTokenAccount === derivedTulipTokenAccount.toBase58();
-  const isTulipAuxillaryAddress =
-    tulipTokenAccount && !isTulipAssociatedAddress;
-  const shouldCreateTulipAssociatedAddress =
-    baseToken.mintAddress !== TOKENS.TULIP.mintAddress
-      ? !isTulipAssociatedAddress
-      : isTulipAuxillaryAddress;
-
-  if (shouldCreateTulipAssociatedAddress) {
-    instructions.push(
-      await serumAssoToken.createAssociatedTokenAccount(
-        // who will pay for the account creation
-        provider.wallet.publicKey,
-
-        // who is the account getting created for
-        provider.wallet.publicKey,
-
-        // what mint address token is being created
-        new anchor.web3.PublicKey(TOKENS.TULIP.mintAddress)
       )
     );
   }
@@ -833,7 +766,6 @@ depositBorrow = async (
 };
 depositMarginLpTokens = async (
   assetSymbol: any,
-  reserveName: any,
   obligationIdx: string | number | anchor.BN | number[] | Uint8Array | Buffer
 ) => {
   const wallet = this.wallet,
@@ -1197,7 +1129,6 @@ depositMarginLpTokens = async (
 };
  swapTokens = async (
   assetSymbol: string,
-  reserveName: string,
   obligationIdx: string | number | anchor.BN | Buffer | Uint8Array | number[]
 ) => {
     const wallet = this.wallet,
@@ -1381,7 +1312,6 @@ depositMarginLpTokens = async (
 };
  addLiquidity = async (
   assetSymbol: any,
-  reserveName: any,
   obligationIdx: string | number | anchor.BN | number[] | Uint8Array | Buffer,
   checkLpTokenAccount = false
 ) => {
