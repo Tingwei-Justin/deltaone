@@ -75,7 +75,6 @@ const Header = () => {
                             <rect x={0} y={0} width={4} height={4} fill="currentColor" />
                         </pattern>
                     </defs>
-                    <rect width={364} height={384} fill="url(#eab71dd9-9d7a-47bd-8044-256344ee00d0)" />
                 </svg>
             </div>
             <div className="relative pt-6 pb-8 sm:pb-12">
