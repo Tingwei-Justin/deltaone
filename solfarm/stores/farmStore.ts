@@ -1,5 +1,5 @@
 import { observable, makeObservable, action,  } from 'mobx';
-import { isNil,  assign,  map, } from 'lodash';
+import { isNil,  assign,  map, get, } from 'lodash';
 import * as anchor from '@project-serum/anchor';
 import { MARKET_STATE_LAYOUT_V2 as  _MARKET_STATE_LAYOUT_V2,  OpenOrders } from '@project-serum/serum/lib/market.js';
 import * as web3js from "@solana/web3.js";
@@ -7,6 +7,7 @@ import { FARMS } from '../farm';
 import { MINT_LAYOUT, VAULT_LAYOUT, ACCOUNT_LAYOUT, GLOBAL_FARM_DATA_LAYOUT } from '../../utils/layouts';
 import { TOKENS } from '../../utils/tokens';
 import { getOrcaVaultProgramId, getVaultAccount, getFarmPoolId, getFarmPoolLpTokenAccount, getFarmPoolCoinTokenaccount, getFarmPoolPcTokenaccount, getFarmAmmId, getFarmAmmOpenOrders, getOrcaVaultAccount, getOrcaFarmPoolCoinTokenaccount, getOrcaFarmPoolPcTokenaccount, getOrcaVaultGlobalFarm, getVaultStakeLayout, isVersionFourOrFive, getVaultAmmLayout, getFarmSerumProgramId, FARM_PLATFORMS, isSupportedLendingFarm } from '../config';
+import { GetMultipleAccountsAndContextRpcResult } from '../multipleAccount';
 
 const NUMBER_OF_PERIODS_IN_A_WEEK = 24 * 7,
   NUMBER_OF_PERIODS_IN_A_YEAR = 24 * 365;
@@ -280,7 +281,6 @@ export default class FarmStore {
         farm.symbol === 'RAY-SRM-DUAL' ? `${farm.mintAddress}0` : farm.mintAddress
       );
 
-      const tulipRewardEmissionRate = window.$slot < farm.rewardEndSlot ? farm.totalTulipEmission : 0;
       const dailyAPR = periodicRate + (farm.disabled ? 0 : dailyTradingFees);
       const weeklyAPY = (100 * getAPY(periodicRate/(24), NUMBER_OF_PERIODS_IN_A_WEEK)) + (farm.disabled ? 0 : (dailyTradingFees * 7));
       const yearlyAPY = (100 * getAPY(periodicRate/(24), NUMBER_OF_PERIODS_IN_A_YEAR)) + (farm.disabled ? 0 : Number(tradingFees));
@@ -297,7 +297,7 @@ export default class FarmStore {
           yearlyYield: (100 * getAPY(periodicRate/(24), NUMBER_OF_PERIODS_IN_A_YEAR)),
           dailyTradingFees
         },
-        tulipAPR: (100 * 365 * tulipRewardEmissionRate * tulipPrice) / tvl,
+        tulipAPR: 100,
         baseTokenTotal,
         quoteTokenTotal,
         needTakePnlCoin,

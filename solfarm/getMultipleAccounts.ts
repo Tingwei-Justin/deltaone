@@ -32,9 +32,6 @@ export const getMultipleAccounts = async (
     const unsafeRes = await connection._rpcRequest("getMultipleAccounts", args);
     const res = GetMultipleAccountsAndContextRpcResult(unsafeRes);
 
-    // Update slot globally
-    window.$slot = get(res, "result.context.slot");
-
     if (res.error) {
       console.error(
         "failed to get info about accounts " +
