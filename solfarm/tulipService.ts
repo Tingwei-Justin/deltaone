@@ -10,13 +10,15 @@ import { getFarmBySymbol } from "./farm"
 import FarmStore from "./stores/farmStore"
 import PriceStore from "./stores/priceStore"
 import { sendAllTransactions } from "./web3"
-import { Connection, PublicKey, SystemProgram } from '@solana/web3.js';
+import { Commitment, Connection, PublicKey, SystemProgram } from '@solana/web3.js';
 import { TOKENS } from "../utils/tokens"
 import { getLendingFarmProgramId, FARM_PLATFORMS, getOrcaVaultProgramId, getVaultProgramId, getLendingProgramId, getLendingFarmAccount, getLendingMarketAccount, getLendingFarmManagementAccount, getReserveByName, getLendingReserve, getPriceFeedsForReserve, getVaultAccount, AQUAFARM_PROGRAM_ID, deriveVaultUserAccount, getFarmFusion, getFarmPoolAuthority, getFarmPoolId, getFarmPoolLpTokenAccount, getFarmPoolRewardATokenAccount, getFarmPoolRewardBTokenAccount, getFarmProgramId, getOrcaVaultAccount, getOrcaVaultConvertAuthority, getOrcaVaultFarmMint, getOrcaVaultGlobalBaseTokenVault, getOrcaVaultGlobalFarm, getOrcaVaultGlobalRewardTokenVault, getOrcaVaultLpMint, getOrcaVaultRewardMint, getVaultInfoAccount, getVaultOldInfoAccount, getVaultPdaAccount, getVaultRewardAccountA, getVaultRewardAccountB, getVaultTulipTokenAccount, getOrcaFarmPoolCoinTokenaccount, getOrcaFarmPoolPcTokenaccount, getOrcaLpMintAddress, getVaultSerumVaultSigner } from "./config"
 import { getMultipleAccounts } from "./getMultipleAccounts"
 import { farmIdl } from "./levFarm"
 import { findUserFarmAddress, findObligationVaultAddress, findUserFarmObligationAddress, findLeveragedFarmAddress, findBorrowAuthorizer, findOrcaUserFarmAddress, findUserFarmManagerAddress } from "./levFarmUtils"
 import { ACCOUNT_LAYOUT } from "../utils/layouts";
+
+const commitment: Commitment = "confirmed"
 
 export default class MarginService{
     stores={}
@@ -512,6 +514,7 @@ depositBorrow = async (
   // Address of the deployed program.
   const vaultProgramId = new anchor.web3.PublicKey(getLendingFarmProgramId());
   // Generate the program client from IDL.
+  // @ts-ignore
   const vaultProgram = new anchor.Program(farmIdl, vaultProgramId);
 
   // console.log('farm.marginIndex', farm.marginIndex);
@@ -845,7 +848,7 @@ depositMarginLpTokens = async (
     );
 
   const userFarmManagerLpTokenAccount = await createAssociatedTokenAccount(
-    provider,
+    provider.wallet.publicKey,
     obligationVaultAccount,
     new anchor.web3.PublicKey(farm?.mintAddress)
   );
@@ -859,7 +862,7 @@ depositMarginLpTokens = async (
       );
 
       const vaultLpTokenAccount = await createAssociatedTokenAccount(
-        provider,
+        provider.wallet.publicKey,
         vaultPdaAccount,
         new anchor.web3.PublicKey(
           getLendingFarmAccount(assetSymbol).raydium_lp_mint_address
@@ -897,16 +900,11 @@ depositMarginLpTokens = async (
         );
 
       const userFarmManagerTulipAccount = await createAssociatedTokenAccount(
-        provider,
+        provider.wallet.publicKey,
         obligationVaultAccount,
         tulipTokenMint
       );
 
-      const userTulipAccount = await createAssociatedTokenAccount(
-        provider,
-        provider.wallet.publicKey,
-        tulipTokenMint
-      );
       const instructions = [];
 
       instructions.push(
@@ -933,7 +931,6 @@ depositMarginLpTokens = async (
                 getVaultTulipTokenAccount(assetSymbol)
               ),
               userTulipTokenAccount: userFarmManagerTulipAccount,
-              authorityTulipTokenAccount: userTulipAccount,
               tokenProgramId: splToken.TOKEN_PROGRAM_ID,
               clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
               rent: anchor.web3.SYSVAR_RENT_PUBKEY,
@@ -1395,7 +1392,7 @@ depositMarginLpTokens = async (
     );
 
   const obligationLpTokenAccount = await createAssociatedTokenAccount(
-    provider,
+    provider.wallet.publicKey,
     obligationVaultAccount,
     new anchor.web3.PublicKey(farm.mintAddress)
   );

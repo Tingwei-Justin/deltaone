@@ -1,5 +1,6 @@
 import { observable, makeObservable, action,  } from 'mobx';
 import { isNil,  assign,  map,  } from 'lodash';
+import {TokenAmount} from "../../utils/token-amount"
 import * as anchor from '@project-serum/anchor';
 import { MARKET_STATE_LAYOUT_V2 as  _MARKET_STATE_LAYOUT_V2,  OpenOrders } from '@project-serum/serum/lib/market.js';
 import * as web3js from "@solana/web3.js";
