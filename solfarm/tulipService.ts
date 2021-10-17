@@ -25,6 +25,9 @@ export default class MarginService{
     constructor(){
         this.stores={}
         this.web3 = this.createWeb3Instance("https://solana-api.projectserum.com")
+        this.stores["PriceStore"] = new PriceStore()
+        this.stores["FarmStore"] = new FarmStore(this.web3, this.stores["priceStore"])
+        this.stores["WalletStore"] = new WalletStore(this.stores['FarmStore'], this.web3)
 
     }
     createWeb3Instance = (endpoint) => {
@@ -32,21 +35,7 @@ export default class MarginService{
         return web3;
       }
     getStore = (storeName: string)=>{
-        if(storeName in this.stores){
-
         return this.stores[storeName]
-        }else{
-            if(storeName === "FarmStore"){
-                this.stores["FarmStore"] = new FarmStore()
-            }
-            if(storeName === "WalletStore"){
-                this.stores["WalletStore"] = new WalletStore()
-            }
-            if(storeName === "PriceStore"){
-                this.stores["PriceStore"] = new PriceStore()
-            }
-        }
-
     }
 
     openMarginPosition = async (

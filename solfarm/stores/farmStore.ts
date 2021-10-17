@@ -1,14 +1,12 @@
-/* eslint-disable no-unused-vars */
-import { observable, makeObservable, action, computed } from 'mobx';
-import { isNil, forEach, assign, find, map, concat, slice, filter, orderBy } from 'lodash';
+import { observable, makeObservable, action,  } from 'mobx';
+import { isNil,  assign,  map, } from 'lodash';
 import * as anchor from '@project-serum/anchor';
-import { MARKET_STATE_LAYOUT_V2 as  _MARKET_STATE_LAYOUT_V2, Orderbook, OpenOrders } from '@project-serum/serum/lib/market.js';
+import { MARKET_STATE_LAYOUT_V2 as  _MARKET_STATE_LAYOUT_V2,  OpenOrders } from '@project-serum/serum/lib/market.js';
 import * as web3js from "@solana/web3.js";
 import { FARMS } from '../farm';
 import { MINT_LAYOUT, VAULT_LAYOUT, ACCOUNT_LAYOUT, GLOBAL_FARM_DATA_LAYOUT } from '../../utils/layouts';
 import { TOKENS } from '../../utils/tokens';
 import { getOrcaVaultProgramId, getVaultAccount, getFarmPoolId, getFarmPoolLpTokenAccount, getFarmPoolCoinTokenaccount, getFarmPoolPcTokenaccount, getFarmAmmId, getFarmAmmOpenOrders, getOrcaVaultAccount, getOrcaFarmPoolCoinTokenaccount, getOrcaFarmPoolPcTokenaccount, getOrcaVaultGlobalFarm, getVaultStakeLayout, isVersionFourOrFive, getVaultAmmLayout, getFarmSerumProgramId, FARM_PLATFORMS, isSupportedLendingFarm } from '../config';
-import { LENDING_RESERVES } from '../lendingReserves';
 
 const NUMBER_OF_PERIODS_IN_A_WEEK = 24 * 7,
   NUMBER_OF_PERIODS_IN_A_YEAR = 24 * 365;
@@ -32,21 +30,19 @@ const getPerBlockAmountTotalValue = (perBlockAmount, price) => {
   );
 }
 
-const tulipUsdcMarketId = '8GufnKq7YnXKhnB3WNhgy5PzU9uvHbaaRrZWQK6ixPxW';
-const sunnyUsdcMarketId = 'Aubv1QBFh4bwB2wbP1DaPW21YyQBLfgjg8L4PHTaPzRc';
-
 export default class FarmStore {
   farms: {};
-  constructor () {
+  web3: undefined;
+  priceStore: any;
+  constructor (web3, priceStore) {
     this.farms = {};
+    this.web3 = web3;
+    this.priceStore = priceStore;
 
     makeObservable(this, {
       farms: observable,
       setFarm: action.bound,
       setPrice: action.bound,
-      pageTVL: computed,
-      visibleFarms: computed,
-      lendingFarms: computed
     });
 
 
@@ -71,7 +67,6 @@ export default class FarmStore {
 
   async setPrice () {
     // return;
-    getStore('UIStore').setIsRefreshing(true);
 
 
     const walletToInitialize = {
@@ -79,14 +74,14 @@ export default class FarmStore {
       signAllTransactions: () => {},
       publicKey: new anchor.web3.Account().publicKey
     };
-    const provider = new anchor.Provider(window.$web3, walletToInitialize, { skipPreflight: true });
+    const provider = new anchor.Provider(this.web3, walletToInitialize, { skipPreflight: true });
 
 
     const orcaVaultProgramId = new anchor.web3.PublicKey(getOrcaVaultProgramId());
     const orcaVaultProgram = new anchor.Program(orcaIdlJson, orcaVaultProgramId, provider);
 
     // const pairs = await PriceFetcherService.fetchAll();
-    const { getTokenPrice, getPair } = getStore('PriceStore');
+    const { getTokenPrice, getPair } = this.priceStore;
     
     // Raydium
     const vaultAccounts = map(FARMS, (farm) => new anchor.web3.PublicKey(getVaultAccount(farm.symbol)));
@@ -152,7 +147,7 @@ export default class FarmStore {
         // orcaAmmIdAccountsInfo,
         // orcaAmmOpenOrdersAccountsInfo,
 
-      ] = await getMultipleAccountsGrouped(window.$web3, accountDetailsToFetch, commitment),
+      ] = await getMultipleAccountsGrouped(this.web3, accountDetailsToFetch, commitment),
       tulipPrice = getTokenPrice(TOKENS.TULIP.symbol);
 
     //#region Raydium Farms
@@ -354,7 +349,7 @@ export default class FarmStore {
         pcInLp = Number(poolPCAmount.fixed()) / uiAmount;
 
         if (farm.symbol === 'ORCA-USDC') {
-          getStore('PriceStore').setTokenPrice(
+          this.priceStore.setTokenPrice(
             TOKENS.ORCA.symbol,
             poolPCAmount.wei.div( poolCoinAmount.wei).toNumber()
           );
@@ -410,127 +405,8 @@ export default class FarmStore {
         coinToPcRatio
       });
     });
-    //#endregion
 
-    getStore('UIStore').resetRefreshState();
   }
   
-  get pageTVL () {
-    let totalSum = 0;
-    
-    forEach(this.farms, (farm) => {
-      if (!farm.tvl) {
-        return;
-      }
 
-      totalSum += farm.tvl;
-    });
-
-    forEach(LENDING_RESERVES, (reserve) => {
-      const {
-        borrowedAmount: totalBorrow = 0,
-        totalSupply,
-      } = getStore('ReserveStore').getReserve(reserve.mintAddress) || {};
-
-      const price = Number(getStore('PriceStore').getTokenPrice(reserve.name)) || 0;
-
-      const totalSupplyInUsd = totalSupply * price;
-      const totalBorrowInUsd = totalBorrow * price;
-
-      totalSum += (totalSupplyInUsd - totalBorrowInUsd);
-    });
-
-    return totalSum;
-  }
-
-  applyFilters (farms) {
-    const { activeFarms } = getStore('FilterStore');
-
-    // return farms.filter((farm) => activeFarms[farm.symbol]);
-
-    return orderBy(farms, [{ isNew: true }, { disabled: true }, { platform: FARM_PLATFORMS.ORCA }], ['desc', 'asc', 'desc'])
-      .filter((farm) => activeFarms[farm.symbol]);
-  }
-
-  get visibleFarms () {
-    const { wallet, tokenAccounts, isTokenAccountInvalid } = getStore('WalletStore'),
-      showStaked = getStore('UserPreferenceStore').get('showStaked');
-
-    const ALLFARMS = concat(FARMS, ORCA_FARMS);
-
-    // If wallet is not connected or if `showStaked` is turned off, show all farms.
-    if (!wallet || !showStaked) {
-      return this.applyFilters(ALLFARMS);
-    }
-
-    const filteredFarms = filter(ALLFARMS, (farm) => {
-      const mintAddress = (
-        farm.symbol === 'RAY-SRM-DUAL' ? `${farm.mintAddress}0` : farm.mintAddress
-      );
-
-      // Show farms with invalid token accounts
-      if (isTokenAccountInvalid(mintAddress, farm?.platform)) {
-        return true;
-      }
-
-      const tokenAccount = tokenAccounts[mintAddress];
-
-      if (!tokenAccount) {
-        return false;
-      }
-
-      const deposited = Number(tokenAccount.deposited);
-
-      if (!deposited) {
-        return false;
-      }
-
-      return true;
-    });
-
-    return this.applyFilters(filteredFarms);
-  }
-
-
-  applyLeverageFarmingFilters (farms) {
-    const { activeFarms } = getStore('LeverageFilterStore');
-
-    return orderBy(farms, { platform: FARM_PLATFORMS.ORCA }, ['desc'])
-      .filter((farm) => activeFarms[farm.symbol]);
-  }
-
-  get lendingFarms () {
-    const { wallet, tokenAccounts, isTokenAccountInvalid } = getStore('WalletStore'),
-      showStaked = getStore('UserPreferenceStore').get('showStaked');
-
-    // If wallet is not connected or if `showStaked` is turned off, show all farms.
-    // if (!wallet || !showStaked) {
-    //   return FARMS;
-    // }
-
-    // const ALL_FARMS = concat(FARMS, ORCA_FARMS);
-
-    const supportedLendingFarms = filter(LEVERAGE_FARMS, (farm) => {
-      // Show farms with invalid token accounts
-      // if (isTokenAccountInvalid(farm.mintAddress, farm.platform)) {
-      //   return true;
-      // }
-
-      // const tokenAccount = tokenAccounts[farm.mintAddress];
-
-      // if (!tokenAccount) {
-      //   return false;
-      // }
-
-      // const deposited = Number(tokenAccounts[farm.mintAddress].deposited);
-
-      // if (!deposited) {
-      //   return false;
-      // }
-
-      return isSupportedLendingFarm(farm.symbol);
-    });
-
-    return this.applyLeverageFarmingFilters(supportedLendingFarms);
-  }
 }

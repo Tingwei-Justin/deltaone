@@ -1,7 +1,6 @@
 import { observable, makeObservable, action, computed } from 'mobx';
 import { isNil, forEach, map, concat, slice, assign, findIndex, filter, noop } from 'lodash';
 import * as anchor from '@project-serum/anchor';
-import * as anchorlatest from 'anchorlatest';
 import * as serumAssoToken from '@project-serum/associated-token';
 import { NATIVE_SOL, TOKENS } from '../../utils/tokens';
 import { findObligationVaultAddress, findUserFarmAddress } from '../levFarmUtils';
@@ -10,6 +9,7 @@ import { LENDING_OBLIGATION_LAYOUT, LENDING_OBLIGATION_LIQUIDITY } from '../../u
 import { FARM_PLATFORMS, getVaultProgramId, getLendingFarmProgramId, getOrcaVaultProgramId, getVaultAccount, getOrcaVaultAccount, getVaultInfoAccount, getVaultOldInfoAccount, deriveVaultUserAccount } from '../config';
 import { FARMS, getFarmBySymbol } from '../farm';
 import { LENDING_RESERVES } from '../lendingReserves';
+import { Connection } from '@solana/web3.js';
 const idlJson = require('../idl/vault.json');
 const farmIdlJson = require('../idl/farm.json');
 const orcaIdlJson = require('../idl/orca_idl.json');
@@ -37,12 +37,16 @@ export default class WalletStore {
   invalidTokenAccounts: Map<any, any>;
   tulipRewardTokenAccountInfo: any;
   existingMintAddress: Map<any, any>;
-  constructor () {
+  farmStore: any;
+  web3: Connection;
+  constructor (farmStore, web3) {
     this.wallet = null;
     this.tokenAccounts = {};
     this.invalidTokenAccounts = new Map();
     this.tulipRewardTokenAccountInfo = null;
     this.existingMintAddress = new Map();
+    this.farmStore = farmStore;
+    this.web3 = web3
 
     makeObservable(this, {
       wallet: observable,
@@ -103,7 +107,7 @@ export default class WalletStore {
         publicKey: new anchor.web3.PublicKey(this.wallet?.publicKey?.toBase58())
       };
 
-    const provider = new anchor.Provider(window.$web3, walletToInitialize, { skipPreflight: true });
+    const provider = new anchor.Provider(this.web3, walletToInitialize, { skipPreflight: true });
     anchor.setProvider(provider);
 
     // Address of the deployed program.
@@ -126,7 +130,7 @@ export default class WalletStore {
           farm.symbol === 'RAY-SRM-DUAL' ? `${farm.mintAddress}0` : farm.mintAddress
         );
 
-        const farmDetails = getStore('FarmStore').getFarm(mintAddress);
+        const farmDetails = this.farmStore.getFarm(mintAddress);
 
         return farmDetails.userBalanceAccount;
       }),
@@ -135,7 +139,7 @@ export default class WalletStore {
           farm.symbol === 'RAY-SRM-DUAL' ? `${farm.mintAddress}0` : farm.mintAddress
         );
 
-        const farmDetails = getStore('FarmStore').getFarm(mintAddress);
+        const farmDetails = this.farmStore.getFarm(mintAddress);
 
         return farmDetails.newUserBalanceAccount;
       }),
@@ -144,7 +148,7 @@ export default class WalletStore {
           farm.symbol === 'RAY-SRM-DUAL' ? `${farm.mintAddress}0` : farm.mintAddress
         );
 
-        const farmDetails = getStore('FarmStore').getFarm(mintAddress);
+        const farmDetails = this.farmStore.getFarm(mintAddress);
 
         return farmDetails.userBalanceMetadataAccount;
       }),
@@ -153,7 +157,7 @@ export default class WalletStore {
           farm.symbol === 'RAY-SRM-DUAL' ? `${farm.mintAddress}0` : farm.mintAddress
         );
 
-        const farmDetails = getStore('FarmStore').getFarm(mintAddress);
+        const farmDetails = this.farmStore.getFarm(mintAddress);
 
         return farmDetails.tulipRewardMetadataAccount;
       }),
@@ -166,13 +170,13 @@ export default class WalletStore {
       //TODO: make a single list of leverage farms
       leverageVaults = filter(LEVERAGE_FARMS, (farm) => !isNil(farm.marginIndex)),
       leverageVaultsUserFarms = map(leverageVaults, (farm) => {
-        const farmDetails = getStore('FarmStore').getFarm(farm.mintAddress);
+        const farmDetails = this.farmStore.getFarm(farm.mintAddress);
 
         return farmDetails.userFarm;
       }),
       orcaVaultAccountKeys = map(ORCA_FARMS, (farm) => new anchor.web3.PublicKey(getOrcaVaultAccount(farm.symbol))),
       orcaVaultUserAccountKeys = map(ORCA_FARMS, (farm) => {
-        const farmDetails = getStore('FarmStore').getFarm(farm.mintAddress);
+        const farmDetails = this.farmStore.getFarm(farm.mintAddress);
         return farmDetails.orcaVaultUserAccountAddress;
       }),
       publicKeys = [
@@ -198,7 +202,7 @@ export default class WalletStore {
       orcaVaultAccountsInfo,
       orcaUserBalanceAccounts,
       tulipRewardTokenAccountInfo
-    ] = await getMultipleAccountsGrouped(window.$web3, publicKeys, commitment);
+    ] = await getMultipleAccountsGrouped(this.web3, publicKeys, commitment);
 
     this.tulipRewardTokenAccountInfo = tulipRewardTokenAccountInfo;
 
@@ -218,7 +222,7 @@ export default class WalletStore {
         farm.symbol === 'RAY-SRM-DUAL' ? `${farm.mintAddress}0` : farm.mintAddress
       );
 
-      getStore('FarmStore').setFarm(mintAddress, {
+      this.farmStore.setFarm(mintAddress, {
         isUserBalanceAccountValid: Boolean(userBalanceAccount),
         isNewUserBalanceAccountValid: Boolean(newUserBalanceAccount)
       });
@@ -412,7 +416,7 @@ export default class WalletStore {
           }
         }
 
-        getStore('FarmStore').setFarm(mintAddress, {
+        this.farmStore.setFarm(mintAddress, {
           userFarmInfo: decodedUserFarmInfo,
           isUserFarmValid: Boolean(userFarmInfo),
           farmObligationAccounts: [],
@@ -434,7 +438,7 @@ export default class WalletStore {
         newUserBalanceAccountData = vaultProgram.coder.accounts.decode('VaultBalanceAccount', Buffer.from(newUserBalanceAccount.account.data));
       }
 
-      getStore('FarmStore').setFarm(mintAddress, {
+      this.farmStore.setFarm(mintAddress, {
         userShares: userBalanceAccountData.amount,
         totalLpTokens: userBalanceMetadataAccount?.totalLpTokens,
         newUserShares: !isNil(newUserBalanceAccountData) && getVaultInfoAccount(farm.symbol) !== getVaultOldInfoAccount(farm.symbol) ? newUserBalanceAccountData.amount: new anchor.BN(0),
@@ -450,7 +454,7 @@ export default class WalletStore {
 
       const mintAddress = farm.mintAddress;
 
-      getStore('FarmStore').setFarm(mintAddress, {
+      this.farmStore.setFarm(mintAddress, {
         isUserBalanceAccountValid: Boolean(userBalanceAccount),
       });
 
@@ -595,7 +599,7 @@ export default class WalletStore {
           }
         }
 
-        getStore('FarmStore').setFarm(mintAddress, {
+        this.farmStore.setFarm(mintAddress, {
           userFarmInfo: decodedUserFarmInfo,
           isUserFarmValid: Boolean(userFarmInfo),
           farmObligationAccounts: [],
@@ -610,7 +614,7 @@ export default class WalletStore {
 
 
       // console.log("$$$ orca info", farm.symbol, userBalanceAccountData);
-      getStore('FarmStore').setFarm(mintAddress, {
+      this.farmStore.setFarm(mintAddress, {
         userShares: userBalanceAccountData.shares,
         totalLpTokens: userBalanceAccountData?.depositedBalance,
         lastDepositTime: userBalanceAccountData?.lastDepositTime.toNumber()
@@ -662,7 +666,7 @@ export default class WalletStore {
 
       const {
         totalVlpShares
-      } = getStore('FarmStore').getFarm(farm.mintAddress) || {};
+      } = this.farmStore.getFarm(farm.mintAddress) || {};
       const vaultAccountInfo = leverageVaultAccountsInfo[openedObligation.farmIndex];
       switch (farm.platform) {
         case FARM_PLATFORMS.RAYDIUM: {
@@ -732,7 +736,7 @@ export default class WalletStore {
 
     for (const farmMintAddress in decodedOpenedObligations) {
       // console.log("$$ opened obligation ", farmMintAddress, decodedOpenedObligations);
-      getStore('FarmStore').setFarm(farmMintAddress, {
+      this.farmStore.setFarm(farmMintAddress, {
         farmObligationAccounts: decodedOpenedObligations[farmMintAddress],
       });
 
@@ -834,7 +838,7 @@ export default class WalletStore {
 
     // We should clear all obligations and then loop again!
     for (const farmMintAddress in decodedPendingObligations) {
-      getStore('FarmStore').setFarm(farmMintAddress, {
+      this.farmStore.setFarm(farmMintAddress, {
         farmPendingObligationAccounts: decodedPendingObligations[farmMintAddress]
       });
 
@@ -848,7 +852,7 @@ export default class WalletStore {
     }
 
     for (const farmMintAddress in decodedPendingCloseObligations) {
-      getStore('FarmStore').setFarm(farmMintAddress, {
+      this.farmStore.setFarm(farmMintAddress, {
         farmPendingCloseObligationAccounts: decodedPendingCloseObligations[farmMintAddress]
       });
 
@@ -862,7 +866,7 @@ export default class WalletStore {
     }
 
     for (const farmMintAddress in decodedPendingAddCollateralObligations) {
-      getStore('FarmStore').setFarm(farmMintAddress, {
+      this.farmStore.setFarm(farmMintAddress, {
         farmPendingAddCollateralAccounts: decodedPendingAddCollateralObligations[farmMintAddress]
       });
 
@@ -887,7 +891,7 @@ export default class WalletStore {
         totalVlpShares,
         totalLpTokens,
         newUserShares
-      } = getStore('FarmStore').getFarm(mintAddress) || {};
+      } = this.farmStore.getFarm(mintAddress) || {};
   
       try {
         if (!isUserBalanceAccountValid) {
@@ -931,7 +935,7 @@ export default class WalletStore {
           );
 
         // Cache Tulip Info to FarmStore
-        getStore('FarmStore').setFarm(farm.mintAddress, {
+        this.farmStore.setFarm(farm.mintAddress, {
           tulipRewardPerShare,
           tulipRewardPerSlot,
           lastInteractionSlot
@@ -963,7 +967,6 @@ export default class WalletStore {
           this.setInvalidTokenAccount(mintAddress, Boolean(depositedAmount));
         }
 
-        getStore('UIStore').resetRefreshState();
       } catch (err) {
         console.error(farm.symbol, err);
       }
@@ -976,7 +979,7 @@ export default class WalletStore {
         totalVaultBalance,
         totalVlpShares,
         totalLpTokens
-      } = getStore('FarmStore').getFarm(farm.mintAddress) || {};
+      } = this.farmStore.getFarm(farm.mintAddress) || {};
 
       try {
         if (!isUserBalanceAccountValid) {
@@ -1025,17 +1028,15 @@ export default class WalletStore {
           this.setInvalidTokenAccount(farm.mintAddress, Boolean(depositedAmount));
         }
 
-        getStore('UIStore').resetRefreshState();
       } catch (err) {
         console.error(farm.symbol, err);
       }
     });
 
-    getStore('UIStore').resetRefreshState();
   }
 
   setTokenAccounts () {
-    const conn = window.$web3;
+    const conn = this.web3;
 
     return conn.getParsedTokenAccountsByOwner(
       this.wallet.publicKey,
@@ -1155,7 +1156,7 @@ export default class WalletStore {
         farm.symbol === 'RAY-SRM-DUAL' ? `${farm.mintAddress}0` : farm.mintAddress
       );
 
-      getStore('FarmStore').setFarm(mintAddress, {
+      this.farmStore.setFarm(mintAddress, {
         userBalanceAccount,
         newUserBalanceAccount,
         userBalanceMetadataAccount,
@@ -1183,7 +1184,7 @@ export default class WalletStore {
         );
       }
 
-      getStore('FarmStore').setFarm(farm.mintAddress, {
+      this.farmStore.setFarm(farm.mintAddress, {
         orcaVaultUserAccountAddress,
         userFarm
       });
@@ -1218,7 +1219,7 @@ export default class WalletStore {
         return;
       }
 
-      const { price = 0 } = getStore('FarmStore')?.getFarm(mintAddress) || {};
+      const { price = 0 } = this.farmStore?.getFarm(mintAddress) || {};
 
       totalSum += tokenAccount.deposited * price;
     });
