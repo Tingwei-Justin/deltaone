@@ -4,6 +4,9 @@ import { assign } from 'lodash';
 import { getFarmBySymbol } from '../farm';
 
 export default class PriceStore {
+  tokensPrice: {};
+  pairs: {};
+
   constructor () {
     this.tokensPrice = {};
     this.pairs = {};

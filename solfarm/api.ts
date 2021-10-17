@@ -34,6 +34,7 @@ export interface FarmDetails {
   isUserFarmValid: boolean;
 }
 
+
 const openMarginPosition = async (
   wallet: Wallet,
   assetSymbol: string,
