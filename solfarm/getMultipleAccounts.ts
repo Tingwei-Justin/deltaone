@@ -1,12 +1,10 @@
-import { PublicKey } from "@solana/web3.js";
+import { Connection, PublicKey } from "@solana/web3.js";
 import { get } from "lodash";
 
 import { GetMultipleAccountsAndContextRpcResult } from "./multipleAccount";
 
 export const getMultipleAccounts = async (
-  connection: {
-    _rpcRequest: (arg0: string, arg1: (any[] | { commitment: any })[]) => any;
-  },
+  connection: Connection,
   publicKeys: any[],
   commitment: any
 ) => {
@@ -30,6 +28,7 @@ export const getMultipleAccounts = async (
   for (const key of keys) {
     const args = [key, { commitment }];
 
+    // @ts-ignore
     const unsafeRes = await connection._rpcRequest("getMultipleAccounts", args);
     const res = GetMultipleAccountsAndContextRpcResult(unsafeRes);
 
