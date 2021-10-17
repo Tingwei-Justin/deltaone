@@ -1,6 +1,6 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 import anchor from "@project-serum/anchor";
 import { concat, find } from "lodash";
+import Decimal from "decimal.js";
 
 import {
   AMM_INFO_LAYOUT_V4,
