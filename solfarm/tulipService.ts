@@ -22,12 +22,13 @@ import { ACCOUNT_LAYOUT } from "../utils/layouts";
 export default class MarginService{
     stores={}
     web3: Connection
-    constructor(){
+    wallet: Wallet;
+    constructor(wallet){
         this.stores={}
+        this.wallet = wallet;
         this.web3 = this.createWeb3Instance("https://solana-api.projectserum.com")
         this.stores["PriceStore"] = new PriceStore()
         this.stores["FarmStore"] = new FarmStore(this.web3, this.stores["priceStore"])
-        this.stores["WalletStore"] = new WalletStore(this.stores['FarmStore'], this.web3)
 
     }
     createWeb3Instance = (endpoint) => {
@@ -35,6 +36,7 @@ export default class MarginService{
         return web3;
       }
     getStore = (storeName: string)=>{
+
         return this.stores[storeName]
     }
 
@@ -165,11 +167,7 @@ export default class MarginService{
   assetSymbol: string,
   obligationIdx: number
 ) => {
-  const {
-      wallet,
-      tokenAccounts,
-      isMintAddressExisting,
-    } = this.getStore("WalletStore"),
+    const wallet = this.wallet,
     walletToInitialize = {
       signTransaction: wallet.signTransaction,
       signAllTransactions: wallet.signAllTransactions,
@@ -369,7 +367,7 @@ export default class MarginService{
   assetSymbol: string,
   obligationIdx: string | number | anchor.BN | Buffer | Uint8Array | number[]
 ) => {
-  const { wallet, isMintAddressExisting } = this.getStore("WalletStore"),
+    const wallet = this.wallet,
     walletToInitialize = {
       signTransaction: wallet.signTransaction,
       signAllTransactions: wallet.signAllTransactions,
@@ -424,48 +422,12 @@ export default class MarginService{
     );
   }
 
-  if (
-    baseToken.symbol !== "SOL" &&
-    !isMintAddressExisting(baseToken.mintAddress)
-  ) {
-    txn.add(
-      await serumAssoToken.createAssociatedTokenAccount(
-        // who will pay for the account creation
-        wallet.publicKey,
-
-        // who is the account getting created for
-        wallet.publicKey,
-
-        // what mint address token is being created
-        new anchor.web3.PublicKey(baseToken.mintAddress)
-      )
-    );
-  }
-
-  if (
-    quoteToken.symbol !== "SOL" &&
-    !isMintAddressExisting(quoteToken.mintAddress)
-  ) {
-    txn.add(
-      await serumAssoToken.createAssociatedTokenAccount(
-        // who will pay for the account creation
-        wallet.publicKey,
-
-        // who is the account getting created for
-        wallet.publicKey,
-
-        // what mint address token is being created
-        new anchor.web3.PublicKey(quoteToken.mintAddress)
-      )
-    );
-  }
 
   return txn;
 };
  createUserFarmObligation = async (assetSymbol, obligationIdx) => {
   // console.log("obligation index", obligationIdx);
-  const { wallet, isMintAddressExisting } =
-      this.getStore("WalletStore"),
+    const wallet = this.wallet,
     walletToInitialize = {
       signTransaction: wallet.signTransaction,
       signAllTransactions: wallet.signAllTransactions,
@@ -564,42 +526,6 @@ export default class MarginService{
     );
   }
 
-  if (
-    baseToken.symbol !== "SOL" &&
-    !isMintAddressExisting(baseToken.mintAddress)
-  ) {
-    instructions.push(
-      await serumAssoToken.createAssociatedTokenAccount(
-        // who will pay for the account creation
-        wallet.publicKey,
-
-        // who is the account getting created for
-        wallet.publicKey,
-
-        // what mint address token is being created
-        new anchor.web3.PublicKey(baseToken.mintAddress)
-      )
-    );
-  }
-
-  if (
-    quoteToken.symbol !== "SOL" &&
-    !isMintAddressExisting(quoteToken.mintAddress)
-  ) {
-    instructions.push(
-      await serumAssoToken.createAssociatedTokenAccount(
-        // who will pay for the account creation
-        wallet.publicKey,
-
-        // who is the account getting created for
-        wallet.publicKey,
-
-        // what mint address token is being created
-        new anchor.web3.PublicKey(quoteToken.mintAddress)
-      )
-    );
-  }
-
   const createUserFarmObligationAccounts = {
     authority: provider.wallet.publicKey,
     userFarm: userFarm,
@@ -632,8 +558,7 @@ depositBorrow = async (
   obligationIdx: string | number | anchor.BN | number[] | Uint8Array | Buffer,
   createAccounts: any
 ) => {
-  const { wallet, tokenAccounts, isMintAddressExisting } =
-      this.getStore("WalletStore"),
+    const wallet = this.wallet,
     walletToInitialize = {
       signTransaction: wallet.signTransaction,
       signAllTransactions: wallet.signAllTransactions,
@@ -726,63 +651,6 @@ depositBorrow = async (
 
   let coinSourceTokenAccount, pcSourceTokenAccount;
   let borrowMint = reserve.mintAddress;
-
-  if (
-    baseToken.symbol !== "SOL" &&
-    !isMintAddressExisting(baseToken.mintAddress)
-  ) {
-    // txn.add(
-    //   await serumAssoToken.createAssociatedTokenAccount(
-    //     // who will pay for the account creation
-    //     wallet.publicKey,
-    //
-    //     // who is the account getting created for
-    //     wallet.publicKey,
-    //
-    //     // what mint address token is being created
-    //     new anchor.web3.PublicKey(baseToken.mintAddress)
-    //   )
-    // );
-
-    coinSourceTokenAccount = await createAssociatedTokenAccount(
-      provider,
-      provider.wallet.publicKey,
-      new anchor.web3.PublicKey(baseToken.mintAddress)
-    );
-  } else {
-    coinSourceTokenAccount = new anchor.web3.PublicKey(
-      tokenAccounts[baseToken.mintAddress]?.tokenAccountAddress
-    );
-  }
-
-  if (
-    quoteToken.symbol !== "SOL" &&
-    !isMintAddressExisting(quoteToken.mintAddress)
-  ) {
-    // txn.add(
-    //   await serumAssoToken.createAssociatedTokenAccount(
-    //     // who will pay for the account creation
-    //     provider.wallet.publicKey,
-    //
-    //     // who is the account getting created for
-    //     provider.wallet.publicKey,
-    //
-    //     // what mint address token is being created
-    //     new anchor.web3.PublicKey(quoteToken.mintAddress)
-    //   )
-    // );
-
-    pcSourceTokenAccount = await createAssociatedTokenAccount(
-      provider,
-      provider.wallet.publicKey,
-      new anchor.web3.PublicKey(quoteToken.mintAddress)
-    );
-  } else {
-    pcSourceTokenAccount = new anchor.web3.PublicKey(
-      tokenAccounts[quoteToken.mintAddress]?.tokenAccountAddress
-    );
-  }
-
   // eslint-disable-next-line prefer-const
   let signers = [];
   if (baseToken.symbol === "SOL") {
@@ -969,7 +837,7 @@ depositMarginLpTokens = async (
   reserveName: any,
   obligationIdx: string | number | anchor.BN | number[] | Uint8Array | Buffer
 ) => {
-  const { wallet } = this.getStore("WalletStore"),
+  const wallet = this.wallet,
     walletToInitialize = {
       signTransaction: wallet.signTransaction,
       signAllTransactions: wallet.signAllTransactions,

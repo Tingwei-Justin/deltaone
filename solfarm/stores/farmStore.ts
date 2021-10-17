@@ -259,6 +259,7 @@ export default class FarmStore {
         const liquidityInUsd = new anchor.BN(decodedPoolLpTokenAccountInfo.amount.toString()).mul(priceBN).div(new anchor.BN(Math.pow(10, farm.decimals)));
         // const liquidityInUsd = (decodedPoolLpTokenAccountInfo.amount.toNumber() / Math.pow(10, farm.decimals)) * price;
 
+        // @ts-ignore
         totalAPY = 100 * rewardPerBlockAmountTotalValue / liquidityInUsd;
       }
 
@@ -379,6 +380,7 @@ export default class FarmStore {
 
 
 
+      // @ts-ignore
       const tvl = totalVaultBalanceInNumber * price;
 
       // @to-do: if we have Tulip rewards for Orca in the future, fix this
