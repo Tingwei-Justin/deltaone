@@ -20,7 +20,7 @@ import { getFarmBySymbol } from "./farms/farm";
 
 export const commitment: Commitment = "confirmed"
 
-export default class MarginService{
+export default class TulipService{
     stores={}
     web3: Connection
     wallet: Wallet;
