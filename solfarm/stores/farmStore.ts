@@ -265,7 +265,6 @@ export default class FarmStore {
         totalAPY = 100 * rewardPerBlockAmountTotalValue / liquidityInUsd;
       }
 
-      // const totalVaultBalanceInNumber =
       const tvl = new anchor.BN(new anchor.BN(totalVaultBalance?.toString()) * price).div(new anchor.BN( Math.pow(10, farm.decimals))) * 1;
 
       // We want `apyDetails` in all cases but `farmDetails` only when the Farm is NOT `singleStake`
