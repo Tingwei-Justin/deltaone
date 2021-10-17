@@ -8,7 +8,6 @@ import { findIndex } from "lodash"
 import { FarmDetails } from "./types"
 import { getFarmBySymbol } from "./farm"
 import FarmStore from "./stores/farmStore"
-import WalletStore from "./stores/walletStore"
 import PriceStore from "./stores/priceStore"
 import { sendAllTransactions } from "./web3"
 import { Connection, PublicKey, SystemProgram } from '@solana/web3.js';
@@ -1201,7 +1200,7 @@ depositMarginLpTokens = async (
   reserveName: string,
   obligationIdx: string | number | anchor.BN | Buffer | Uint8Array | number[]
 ) => {
-  const { wallet } = this.getStore("WalletStore"),
+    const wallet = this.wallet,
     walletToInitialize = {
       signTransaction: wallet.signTransaction,
       signAllTransactions: wallet.signAllTransactions,
@@ -1386,7 +1385,7 @@ depositMarginLpTokens = async (
   obligationIdx: string | number | anchor.BN | number[] | Uint8Array | Buffer,
   checkLpTokenAccount = false
 ) => {
-  const { wallet } = this.getStore("WalletStore"),
+    const wallet = this.wallet,
     walletToInitialize = {
       signTransaction: wallet.signTransaction,
       signAllTransactions: wallet.signAllTransactions,
