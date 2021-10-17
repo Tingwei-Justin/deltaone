@@ -1,7 +1,7 @@
 import { observable, makeObservable, action } from 'mobx';
-import { PriceFetcherService } from '../services/PriceFetcherService';
 import { assign } from 'lodash';
-import { getFarmBySymbol } from '../farm';
+import {PriceFetcherService} from "../service/priceFetcherService"
+import { getFarmBySymbol } from '../farms/farm';
 
 export default class PriceStore {
   tokensPrice: {};
@@ -36,6 +36,7 @@ export default class PriceStore {
     const pairsToStore = {};
 
     for (const [_, pair] of Object.entries(pairs)) {
+      // @ts-ignore
       pairsToStore[pair.lp_mint] = pair;
     }
 

@@ -4,10 +4,13 @@ import {TokenAmount} from "../../utils/token-amount"
 import * as anchor from '@project-serum/anchor';
 import { MARKET_STATE_LAYOUT_V2 as  _MARKET_STATE_LAYOUT_V2,  OpenOrders } from '@project-serum/serum/lib/market.js';
 import * as web3js from "@solana/web3.js";
-import { FARMS } from '../farm';
 import { MINT_LAYOUT, VAULT_LAYOUT, ACCOUNT_LAYOUT, GLOBAL_FARM_DATA_LAYOUT } from '../../utils/layouts';
 import { TOKENS } from '../../utils/tokens';
-import { getOrcaVaultProgramId, getVaultAccount, getFarmPoolId, getFarmPoolLpTokenAccount, getFarmPoolCoinTokenaccount, getFarmPoolPcTokenaccount, getFarmAmmId, getFarmAmmOpenOrders, getOrcaVaultAccount, getOrcaFarmPoolCoinTokenaccount, getOrcaFarmPoolPcTokenaccount, getOrcaVaultGlobalFarm, getVaultStakeLayout, isVersionFourOrFive, getVaultAmmLayout, getFarmSerumProgramId, FARM_PLATFORMS, isSupportedLendingFarm } from '../config';
+import { getOrcaVaultProgramId, getVaultAccount, getFarmPoolId, getFarmPoolLpTokenAccount, getFarmPoolCoinTokenaccount, getFarmPoolPcTokenaccount, getFarmAmmId, getFarmAmmOpenOrders, getOrcaVaultAccount, getOrcaFarmPoolCoinTokenaccount, getOrcaFarmPoolPcTokenaccount, getOrcaVaultGlobalFarm, getVaultStakeLayout, isVersionFourOrFive, getVaultAmmLayout, getFarmSerumProgramId, FARM_PLATFORMS, isSupportedLendingFarm, getOrcaPeriodRate } from '../config';
+import { FARMS } from '../farms/farm';
+import {ORCA_FARMS} from "../farms/orcaFarms"
+import { getMultipleAccountsGrouped } from '../multipleAccount';
+import { commitment } from '../tulipService';
 
 const NUMBER_OF_PERIODS_IN_A_WEEK = 24 * 7,
   NUMBER_OF_PERIODS_IN_A_YEAR = 24 * 365;
@@ -234,10 +237,12 @@ export default class FarmStore {
         let apyA = 0;
         let apyB = 0;
         try {
+          // @ts-ignore
           liquidityInUsd = new anchor.BN(new anchor.BN(decodedPoolLpTokenAccountInfo.amount.toString()) * price).div(new anchor.BN(Math.pow(10, farm.decimals)));
           apyA = (100 * rewardPerBlockAmountTotalValue) / liquidityInUsd;
           apyB = (100 * rewardBPerBlockAmountTotalValue) / liquidityInUsd;
         } catch (e) {
+          // @ts-ignore
           liquidityInUsd = (new anchor.BN(decodedPoolLpTokenAccountInfo.amount.toString()).div(new anchor.BN(Math.pow(10, farm.decimals)))) * price;
           apyA = (100 * rewardPerBlockAmountTotalValue) / liquidityInUsd;
           apyB = (100 * rewardBPerBlockAmountTotalValue) / liquidityInUsd;
@@ -265,6 +270,7 @@ export default class FarmStore {
         totalAPY = 100 * rewardPerBlockAmountTotalValue / liquidityInUsd;
       }
 
+      // @ts-ignore
       const tvl = new anchor.BN(new anchor.BN(totalVaultBalance?.toString()) * price).div(new anchor.BN( Math.pow(10, farm.decimals))) * 1;
 
       // We want `apyDetails` in all cases but `farmDetails` only when the Farm is NOT `singleStake`
@@ -338,6 +344,7 @@ export default class FarmStore {
         totalLiquidity,
         coinToPcRatio;
 
+      // @ts-ignore
       if (farm.singleStake) {
         price = Number(getTokenPrice(farm.symbol));
       } else {
@@ -373,8 +380,11 @@ export default class FarmStore {
 
       // console.log("$$$ orca farm", farm.symbol, periodicRate, tradingFees, decodedGlobalFarm, totalLiquidity, farm.reward.decimals, orcaPrice);
 
+      // @ts-ignore
       const dailyAPR = periodicRate + (farm.disabled ? 0 : dailyTradingFees);
+      // @ts-ignore
       const weeklyAPY = (100 * getAPY(periodicRate/(24), NUMBER_OF_PERIODS_IN_A_WEEK)) + (farm.disabled ? 0 : (dailyTradingFees * 7));
+      // @ts-ignore
       const yearlyAPY = (100 * getAPY(periodicRate/(24), NUMBER_OF_PERIODS_IN_A_YEAR)) + (farm.disabled ? 0 : Number(tradingFees));
 
 

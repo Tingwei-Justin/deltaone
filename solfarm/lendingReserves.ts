@@ -1,4 +1,4 @@
-import { TOKENS } from "./config";
+import { NATIVE_SOL, TOKENS } from "../utils/tokens";
 
 export const LENDING_RESERVES = [
   {

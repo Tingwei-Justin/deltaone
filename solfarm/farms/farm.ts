@@ -1,6 +1,6 @@
-import { FARM_PLATFORMS } from "./config";
-import {NATIVE_SOL, TOKENS} from "../utils/tokens"
 import {find} from "lodash"
+import { NATIVE_SOL, TOKENS } from "../../utils/tokens";
+import { FARM_PLATFORMS } from "../config";
 export const FARMS = [
   {
     symbol: "LARIX-RAY",

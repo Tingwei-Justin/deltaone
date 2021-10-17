@@ -6,7 +6,6 @@ import { createAssociatedTokenAccount } from "@project-serum/associated-token";
 import { Wallet } from "@project-serum/anchor"
 import { findIndex } from "lodash"
 import { FarmDetails } from "./types"
-import { getFarmBySymbol } from "./farm"
 import FarmStore from "./stores/farmStore"
 import PriceStore from "./stores/priceStore"
 import { sendAllTransactions } from "./web3"
@@ -17,8 +16,9 @@ import { getMultipleAccounts } from "./getMultipleAccounts"
 import { farmIdl } from "./levFarm"
 import { findUserFarmAddress, findObligationVaultAddress, findUserFarmObligationAddress, findLeveragedFarmAddress, findBorrowAuthorizer, findOrcaUserFarmAddress, findUserFarmManagerAddress } from "./levFarmUtils"
 import { ACCOUNT_LAYOUT } from "../utils/layouts";
+import { getFarmBySymbol } from "./farms/farm";
 
-const commitment: Commitment = "confirmed"
+export const commitment: Commitment = "confirmed"
 
 export default class MarginService{
     stores={}
