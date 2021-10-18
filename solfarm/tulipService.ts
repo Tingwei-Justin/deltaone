@@ -34,7 +34,7 @@ export default class TulipService{
 
     }
     createWeb3Instance = (endpoint) => {
-        const web3 = new Connection(endpoint);
+        const web3 = new Connection(endpoint, { commitment, wsEndpoint: endpoint });
         return web3;
       }
     getStore = (storeName: string)=>{
