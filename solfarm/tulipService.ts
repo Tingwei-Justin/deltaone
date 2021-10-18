@@ -41,7 +41,7 @@ export default class TulipService{
         return this.stores[storeName]
     }
 
-    openMarginPosition = async (
+openMarginPosition = async (
     wallet: Wallet,
     assetSymbol: string,
     reserveName: string,
@@ -62,6 +62,7 @@ export default class TulipService{
     const { userFarmInfo } = farmDetails || {};
     const { obligations } = userFarmInfo || {};
 
+    // TODO: What is this?
     let obligationIdx;
     if (obligationIndex !== -2) {
         obligationIdx = obligationIndex;
@@ -164,7 +165,7 @@ export default class TulipService{
         extraSigners
     );
 };
- createUserFarm = async (
+createUserFarm = async (
   assetSymbol: string,
   obligationIdx: number
 ) => {
@@ -296,9 +297,7 @@ export default class TulipService{
 
   return txn;
 };
-
-
- createUserAccounts = async (
+createUserAccounts = async (
   assetSymbol: string,
   obligationIdx: string | number | anchor.BN | Buffer | Uint8Array | number[]
 ) => {
@@ -360,7 +359,7 @@ export default class TulipService{
 
   return txn;
 };
- createUserFarmObligation = async (assetSymbol, obligationIdx) => {
+createUserFarmObligation = async (assetSymbol, obligationIdx) => {
   // console.log("obligation index", obligationIdx);
     const wallet = this.wallet,
     walletToInitialize = {
@@ -1127,7 +1126,7 @@ depositMarginLpTokens = async (
 
   return txn;
 };
- swapTokens = async (
+swapTokens = async (
   assetSymbol: string,
   obligationIdx: string | number | anchor.BN | Buffer | Uint8Array | number[]
 ) => {
@@ -1311,7 +1310,7 @@ depositMarginLpTokens = async (
 
   return txn;
 };
- addLiquidity = async (
+addLiquidity = async (
   assetSymbol: any,
   obligationIdx: string | number | anchor.BN | number[] | Uint8Array | Buffer,
   checkLpTokenAccount = false
