@@ -62,7 +62,10 @@ openMarginPosition = async (
     const { userFarmInfo } = farmDetails || {};
     const { obligations } = userFarmInfo || {};
 
-    // TODO: What is this?
+    // Here we are just figuring out what state the user's farm is in.
+    // Is it opening, borrowed, swapped, .etc?
+    // That way this function can be multi entrant. 
+    // We can constantly check the user progress and then do the next item. 
     let obligationIdx;
     if (obligationIndex !== -2) {
         obligationIdx = obligationIndex;
@@ -88,6 +91,7 @@ openMarginPosition = async (
     let createAccounts = false;
     const extraSigners = [];
 
+    // step 1 seems to be to create a user farm.
     if (!isUserFarmValid) {
         createAccounts = true;
         obligationIdx = 0;
@@ -125,6 +129,8 @@ openMarginPosition = async (
         transactions.push(this.createUserAccounts(assetSymbol, obligationIdx));
         extraSigners.push([]);
     }
+
+    // step 2 is to borrow money.
     if (obligationProgress > 0 && obligationProgress < 2) {
         const [depositBorrowTxn, signer] = await this.depositBorrow(
         assetSymbol,
@@ -139,16 +145,19 @@ openMarginPosition = async (
         extraSigners.push(signer);
     }
 
+    // step 3 is to swap tokens, likely in half so that each side of the pool can get money
     if (obligationProgress > 0 && obligationProgress < 3) {
         transactions.push(this.swapTokens(assetSymbol, obligationIdx));
         extraSigners.push([]);
     }
 
+    // step 4 is to put money in the AMM liquidity pool we chose.
     if (obligationProgress > 0 && obligationProgress < 4) {
         transactions.push(this.addLiquidity(assetSymbol,  obligationIdx));
         extraSigners.push([]);
     }
 
+    // step 5 is to deposit the margin lp tokens.  
     if (obligationProgress > 0 && obligationProgress < 5) {
         transactions.push(
         this.depositMarginLpTokens(assetSymbol,  obligationIdx)
@@ -778,11 +787,17 @@ depositMarginLpTokens = async (
       signAllTransactions: wallet.signAllTransactions,
       publicKey: new anchor.web3.PublicKey(wallet.publicKey.toBase58()),
     },
+      // PROVIDER: The network and wallet context used to send transactions paid for and signed by the provider.
     provider = new anchor.Provider(this.web3, walletToInitialize, {
+      // PREFLIGHT Checks that are skipped: 
+      // 1) The transaction signatures are verified
+      // 2) The transaction is simulated against the bank slot specified by the preflight commitment. 
       skipPreflight: true,
+      // TODO: what is preflight commitment? 
       preflightCommitment: commitment,
     });
 
+  // TODO: what is setting a provider do?
   anchor.setProvider(provider);
 
   // Address of the deployed program.
