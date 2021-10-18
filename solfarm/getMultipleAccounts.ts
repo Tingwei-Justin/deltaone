@@ -4,10 +4,13 @@ import { get } from "lodash";
 import { GetMultipleAccountsAndContextRpcResult } from "./multipleAccount";
 
 export const getMultipleAccounts = async (
-  connection: Connection,
+  connection?: Connection,
   publicKeys: any[],
   commitment: any
 ) => {
+  if(!connection){
+    return
+  }
   const keys = [];
   let tempKeys = [];
 

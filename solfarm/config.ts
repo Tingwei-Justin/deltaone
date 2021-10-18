@@ -12,6 +12,7 @@ import { config } from "./idl/config"
 import { lendConfig } from "./idl/lend_info"
 import { saberConfig } from "./idl/saber_info";
 import { orcaConfig } from "./idl/orca_info";
+import { PublicKey } from "@solana/web3.js";
 
 export const getVaultProgramId = () => config.programId;
 export const getTokenProgramId = () => config.rayTokenProgramId;
@@ -27,99 +28,99 @@ const vaultAccounts = concat(
 const farmAccounts = concat(config.farms, saberConfig.farms, orcaConfig.farms);
 
 //#region Vault getters
-export const getVaultInfoAccount = (name) => {
+export const getVaultInfoAccount = (name: string) => {
   const vaultAccount = find(vaultAccounts, (account) => account.name === name);
 
   return vaultAccount?.infoAccount;
 };
 
-export const getVaultOldInfoAccount = (name) => {
+export const getVaultOldInfoAccount = (name: string) => {
   const vaultAccount = find(vaultAccounts, (account) => account.name === name);
 
   return vaultAccount?.oldInfoAccount;
 };
 
-export const getVaultAccount = (name) => {
+export const getVaultAccount = (name: string) => {
   const vaultAccount = find(vaultAccounts, (account) => account.name === name);
 
   return vaultAccount?.account;
 };
 
-export const getVaultLpTokenAccount = (name) => {
+export const getVaultLpTokenAccount = (name: string) => {
   const vaultAccount = find(vaultAccounts, (account) => account.name === name);
 
   return vaultAccount?.lpTokenAccount;
 };
 
-export const getVaultPdaAccount = (name) => {
+export const getVaultPdaAccount = (name: string) => {
   const vaultAccount = find(vaultAccounts, (account) => account.name === name);
 
   return vaultAccount?.pdaAccount;
 };
 
-export const getVaultRewardAccountA = (name) => {
+export const getVaultRewardAccountA = (name: string) => {
   const vaultAccount = find(vaultAccounts, (account) => account.name === name);
 
   return vaultAccount?.rewardAccountA;
 };
 
-export const getVaultRewardAccountB = (name) => {
+export const getVaultRewardAccountB = (name: string) => {
   const vaultAccount = find(vaultAccounts, (account) => account.name === name);
 
   return vaultAccount?.rewardAccountB;
 };
 
-export const getVaultVersion = (name) => {
+export const getVaultVersion = (name: string) => {
   const vaultAccount = find(vaultAccounts, (account) => account.name === name);
 
   return vaultAccount?.rayPoolVersion;
 };
 
-export const getVaultTulipTokenAccount = (name) => {
+export const getVaultTulipTokenAccount = (name: string) => {
   const vaultAccount = find(vaultAccounts, (account) => account.name === name);
 
   return vaultAccount?.vaultTulipTokenAccount;
 };
 
-export const getVaultTulipRewardPerSlot = (name) => {
+export const getVaultTulipRewardPerSlot = (name: string) => {
   const vaultAccount = find(vaultAccounts, (account) => account.name === name);
 
   return vaultAccount?.tulipRewardPerSlot;
 };
 
-export const getVaultTulipRewardEndSlot = (name) => {
+export const getVaultTulipRewardEndSlot = (name: string) => {
   const vaultAccount = find(vaultAccounts, (account) => account.name === name);
 
   return vaultAccount?.tulipRewardEndSlot;
 };
 
-export const getVaultTulipMint = (name) => {
+export const getVaultTulipMint = (name: string) => {
   const vaultAccount = find(vaultAccounts, (account) => account.name === name);
 
   return vaultAccount?.tulipMint;
 };
 
-export const getVaultSerumOpenOrdersAccount = (name) => {
+export const getVaultSerumOpenOrdersAccount = (name: string) => {
   const vaultAccount = find(vaultAccounts, (account) => account.name === name);
 
   return vaultAccount?.serumOpenOrdersAccount;
 };
 
-export const getVaultSerumVaultSigner = (name) => {
+export const getVaultSerumVaultSigner = (name: string) => {
   const vaultAccount = find(vaultAccounts, (account) => account.name === name);
 
   return vaultAccount?.serumVaultSigner;
 };
 
-export const getVaultStakeLayout = (name) => {
+export const getVaultStakeLayout = (name: string) => {
   return isVersionFourOrFive(name) ? STAKE_INFO_LAYOUT_V4 : STAKE_INFO_LAYOUT;
 };
 
-export const getVaultAmmLayout = (name) => {
+export const getVaultAmmLayout = (name: string) => {
   return isVersionFourOrFive(name) ? AMM_INFO_LAYOUT_V4 : AMM_INFO_LAYOUT_V4;
 };
 
-export const isVersionFourOrFive = (name) => {
+export const isVersionFourOrFive = (name: string) => {
   const vaultVersion = getVaultVersion(name);
 
   return ["4", "5"].includes(vaultVersion);
@@ -127,7 +128,7 @@ export const isVersionFourOrFive = (name) => {
 //#endregion
 
 //#region Saber Vault getters
-export const getSaberVaultInfoAccount = (name) => {
+export const getSaberVaultInfoAccount = (name: string) => {
   const vaultAccount = find(
     saberConfig.vault.accounts,
     (account) => account.name === name
@@ -136,7 +137,7 @@ export const getSaberVaultInfoAccount = (name) => {
   return vaultAccount?.infoAccount;
 };
 
-export const getSaberVaultAccount = (name) => {
+export const getSaberVaultAccount = (name: string) => {
   const vaultAccount = find(
     saberConfig.vault.accounts,
     (account) => account.name === name
@@ -145,7 +146,7 @@ export const getSaberVaultAccount = (name) => {
   return vaultAccount?.account;
 };
 
-export const getSaberVaultTempLpTokenAccount = (name) => {
+export const getSaberVaultTempLpTokenAccount = (name: string) => {
   const vaultAccount = find(
     saberConfig.vault.accounts,
     (account) => account.name === name
@@ -154,7 +155,7 @@ export const getSaberVaultTempLpTokenAccount = (name) => {
   return vaultAccount?.vault_temp_lp_token_account;
 };
 
-export const getSaberVaultLpTokenMint = (name) => {
+export const getSaberVaultLpTokenMint = (name: string) => {
   const vaultAccount = find(
     saberConfig.vault.accounts,
     (account) => account.name === name
@@ -163,7 +164,7 @@ export const getSaberVaultLpTokenMint = (name) => {
   return vaultAccount?.saber_farm_lp_token_mint;
 };
 
-export const getSaberVaultPdaAccount = (name) => {
+export const getSaberVaultPdaAccount = (name: string) => {
   const vaultAccount = find(
     saberConfig.vault.accounts,
     (account) => account.name === name
@@ -172,7 +173,7 @@ export const getSaberVaultPdaAccount = (name) => {
   return vaultAccount?.vault_pda_signer;
 };
 
-export const getSaberVaultRewardAccount = (name) => {
+export const getSaberVaultRewardAccount = (name: string) => {
   const vaultAccount = find(
     saberConfig.vault.accounts,
     (account) => account.name === name
@@ -181,7 +182,7 @@ export const getSaberVaultRewardAccount = (name) => {
   return vaultAccount?.vault_saber_rewards_token_account;
 };
 
-export const getSaberVaultLandlord = (name) => {
+export const getSaberVaultLandlord = (name: string) => {
   const vaultAccount = find(
     saberConfig.vault.accounts,
     (account) => account.name === name
@@ -190,7 +191,7 @@ export const getSaberVaultLandlord = (name) => {
   return vaultAccount?.saber_farm_landlord;
 };
 
-export const getSaberVaultFarmProgram = (name) => {
+export const getSaberVaultFarmProgram = (name: string) => {
   const vaultAccount = find(
     saberConfig.vault.accounts,
     (account) => account.name === name
@@ -199,7 +200,7 @@ export const getSaberVaultFarmProgram = (name) => {
   return vaultAccount?.saber_farm_program;
 };
 
-export const getSaberVaultSunnyFarmProgram = (name) => {
+export const getSaberVaultSunnyFarmProgram = (name: string) => {
   const vaultAccount = find(
     saberConfig.vault.accounts,
     (account) => account.name === name
@@ -208,7 +209,7 @@ export const getSaberVaultSunnyFarmProgram = (name) => {
   return vaultAccount?.sunny_farm_program;
 };
 
-export const getSaberVaultFarmPlot = (name) => {
+export const getSaberVaultFarmPlot = (name: string) => {
   const vaultAccount = find(
     saberConfig.vault.accounts,
     (account) => account.name === name
@@ -217,7 +218,7 @@ export const getSaberVaultFarmPlot = (name) => {
   return vaultAccount?.saber_farm_plot;
 };
 
-export const getSaberVaultCoinTokenAccount = (name) => {
+export const getSaberVaultCoinTokenAccount = (name: string) => {
   const vaultAccount = find(
     saberConfig.vault.accounts,
     (account) => account.name === name
@@ -226,7 +227,7 @@ export const getSaberVaultCoinTokenAccount = (name) => {
   return vaultAccount?.saber_coin_token_account;
 };
 
-export const getSaberVaultPcTokenAccount = (name) => {
+export const getSaberVaultPcTokenAccount = (name: string) => {
   const vaultAccount = find(
     saberConfig.vault.accounts,
     (account) => account.name === name
@@ -235,7 +236,7 @@ export const getSaberVaultPcTokenAccount = (name) => {
   return vaultAccount?.saber_pc_token_account;
 };
 
-export const getSaberAssociatedVaultFarmerAccount = (name) => {
+export const getSaberAssociatedVaultFarmerAccount = (name: string) => {
   const vaultAccount = find(
     saberConfig.vault.accounts,
     (account) => account.name === name
@@ -244,7 +245,7 @@ export const getSaberAssociatedVaultFarmerAccount = (name) => {
   return vaultAccount?.associated_vault_farmer_account;
 };
 
-export const getSaberFarmVaultLpTokenAccount = (name) => {
+export const getSaberFarmVaultLpTokenAccount = (name: string) => {
   const vaultAccount = find(
     saberConfig.vault.accounts,
     (account) => account.name === name
@@ -253,7 +254,7 @@ export const getSaberFarmVaultLpTokenAccount = (name) => {
 };
 //#endregion
 
-export const getSaberFarmSunnyPool = (name) => {
+export const getSaberFarmSunnyPool = (name: string) => {
   const vaultAccount = find(
     saberConfig.vault.accounts,
     (account) => account.name === name
@@ -261,7 +262,7 @@ export const getSaberFarmSunnyPool = (name) => {
   return vaultAccount?.sunny_pool;
 };
 
-export const getSaberFarmSunnyVaultAccount = (name) => {
+export const getSaberFarmSunnyVaultAccount = (name: string) => {
   const vaultAccount = find(
     saberConfig.vault.accounts,
     (account) => account.name === name
@@ -269,7 +270,7 @@ export const getSaberFarmSunnyVaultAccount = (name) => {
   return vaultAccount?.sunny_vault_account;
 };
 
-export const getSaberFarmSunnyVaultFarmTokenAccount = (name) => {
+export const getSaberFarmSunnyVaultFarmTokenAccount = (name: string) => {
   const vaultAccount = find(
     saberConfig.vault.accounts,
     (account) => account.name === name
@@ -277,7 +278,7 @@ export const getSaberFarmSunnyVaultFarmTokenAccount = (name) => {
   return vaultAccount?.sunny_vault_farm_token_account;
 };
 
-export const getSaberFarmSunnyVaultLpTokenAccount = (name) => {
+export const getSaberFarmSunnyVaultLpTokenAccount = (name: string) => {
   const vaultAccount = find(
     saberConfig.vault.accounts,
     (account) => account.name === name
@@ -285,7 +286,7 @@ export const getSaberFarmSunnyVaultLpTokenAccount = (name) => {
   return vaultAccount?.sunny_vault_lp_token_account;
 };
 
-export const getSaberFarmSunnyFarmer = (name) => {
+export const getSaberFarmSunnyFarmer = (name: string) => {
   const vaultAccount = find(
     saberConfig.vault.accounts,
     (account) => account.name === name
@@ -293,7 +294,7 @@ export const getSaberFarmSunnyFarmer = (name) => {
   return vaultAccount?.sunny_vault_farmer_account;
 };
 
-export const getSaberFarmSunnyFarmerVault = (name) => {
+export const getSaberFarmSunnyFarmerVault = (name: string) => {
   const vaultAccount = find(
     saberConfig.vault.accounts,
     (account) => account.name === name
@@ -301,7 +302,7 @@ export const getSaberFarmSunnyFarmerVault = (name) => {
   return vaultAccount?.sunny_vault_farmer_lp_token_account;
 };
 
-export const getSaberFarmSunnyFarmTokenAccount = (name) => {
+export const getSaberFarmSunnyFarmTokenAccount = (name: string) => {
   const vaultAccount = find(
     saberConfig.vault.accounts,
     (account) => account.name === name
@@ -309,7 +310,7 @@ export const getSaberFarmSunnyFarmTokenAccount = (name) => {
   return vaultAccount?.sunny_vault_farm_token_account;
 };
 
-export const getSaberFarmSunnyMineProgram = (name) => {
+export const getSaberFarmSunnyMineProgram = (name: string) => {
   const vaultAccount = find(
     saberConfig.vault.accounts,
     (account) => account.name === name
@@ -317,7 +318,7 @@ export const getSaberFarmSunnyMineProgram = (name) => {
   return vaultAccount?.sunny_mine_program;
 };
 
-export const getSaberFarmSunnyFarmMint = (name) => {
+export const getSaberFarmSunnyFarmMint = (name: string) => {
   const vaultAccount = find(
     saberConfig.vault.accounts,
     (account) => account.name === name
@@ -325,7 +326,7 @@ export const getSaberFarmSunnyFarmMint = (name) => {
   return vaultAccount?.sunny_farm_mint;
 };
 
-export const getSaberFarmSunnyRewarder = (name) => {
+export const getSaberFarmSunnyRewarder = (name: string) => {
   const vaultAccount = find(
     saberConfig.vault.accounts,
     (account) => account.name === name
@@ -333,7 +334,7 @@ export const getSaberFarmSunnyRewarder = (name) => {
   return vaultAccount?.sunny_rewarder;
 };
 
-export const getSaberFarmSunnyQuarry = (name) => {
+export const getSaberFarmSunnyQuarry = (name: string) => {
   const vaultAccount = find(
     saberConfig.vault.accounts,
     (account) => account.name === name
@@ -341,7 +342,7 @@ export const getSaberFarmSunnyQuarry = (name) => {
   return vaultAccount?.sunny_quarry;
 };
 
-export const getSaberFarmSunnyMiner = (name) => {
+export const getSaberFarmSunnyMiner = (name: string) => {
   const vaultAccount = find(
     saberConfig.vault.accounts,
     (account) => account.name === name
@@ -349,7 +350,7 @@ export const getSaberFarmSunnyMiner = (name) => {
   return vaultAccount?.sunny_vault_miner_account;
 };
 
-export const getSaberFarmSunnyMinerVault = (name) => {
+export const getSaberFarmSunnyMinerVault = (name: string) => {
   const vaultAccount = find(
     saberConfig.vault.accounts,
     (account) => account.name === name
@@ -357,7 +358,7 @@ export const getSaberFarmSunnyMinerVault = (name) => {
   return vaultAccount?.sunny_vault_miner_farm_token_account;
 };
 
-export const getSaberFarmQuarryMiner = (name) => {
+export const getSaberFarmQuarryMiner = (name: string) => {
   const vaultAccount = find(
     saberConfig.vault.accounts,
     (account) => account.name === name
@@ -365,7 +366,7 @@ export const getSaberFarmQuarryMiner = (name) => {
   return vaultAccount?.quarry_miner;
 };
 
-export const getSaberFarmQuarry = (name) => {
+export const getSaberFarmQuarry = (name: string) => {
   const vaultAccount = find(
     saberConfig.vault.accounts,
     (account) => account.name === name
@@ -373,7 +374,7 @@ export const getSaberFarmQuarry = (name) => {
   return vaultAccount?.quarry;
 };
 
-export const getSaberFarmQuarryMinerVault = (name) => {
+export const getSaberFarmQuarryMinerVault = (name: string) => {
   const vaultAccount = find(
     saberConfig.vault.accounts,
     (account) => account.name === name
@@ -381,12 +382,12 @@ export const getSaberFarmQuarryMinerVault = (name) => {
   return vaultAccount?.quarry_miner_vault;
 };
 
-export const getSaberFarmQuarryRewarder = (name) => {
+export const getSaberFarmQuarryRewarder = (name: any) => {
   return "rXhAofQCT7NN9TUqigyEAUzV1uLL4boeD8CRkNBSkYk";
 };
 
 //#region Orca Vault getters
-export const getOrcaVaultAccount = (name) => {
+export const getOrcaVaultAccount = (name: string) => {
   const vaultAccount = find(
     orcaConfig.vault.accounts,
     (account) => account.name === name
@@ -395,7 +396,7 @@ export const getOrcaVaultAccount = (name) => {
   return vaultAccount?.account;
 };
 
-export const getOrcaVaultLpAccount = (name) => {
+export const getOrcaVaultLpAccount = (name: string) => {
   const vaultAccount = find(
     orcaConfig.vault.accounts,
     (account) => account.name === name
@@ -404,7 +405,7 @@ export const getOrcaVaultLpAccount = (name) => {
   return vaultAccount?.farm_token_account;
 };
 
-export const getOrcaVaultFarmMint = (name) => {
+export const getOrcaVaultFarmMint = (name: string) => {
   const vaultAccount = find(
     orcaConfig.vault.accounts,
     (account) => account.name === name
@@ -413,7 +414,7 @@ export const getOrcaVaultFarmMint = (name) => {
   return vaultAccount?.farm_token_mint;
 };
 
-export const getOrcaVaultGlobalBaseTokenVault = (name) => {
+export const getOrcaVaultGlobalBaseTokenVault = (name: string) => {
   const vaultAccount = find(
     orcaConfig.vault.accounts,
     (account) => account.name === name
@@ -422,7 +423,7 @@ export const getOrcaVaultGlobalBaseTokenVault = (name) => {
   return vaultAccount?.global_base_token_vault;
 };
 
-export const getOrcaVaultGlobalFarm = (name) => {
+export const getOrcaVaultGlobalFarm = (name: string) => {
   const vaultAccount = find(
     orcaConfig.vault.accounts,
     (account) => account.name === name
@@ -431,7 +432,7 @@ export const getOrcaVaultGlobalFarm = (name) => {
   return vaultAccount?.global_farm;
 };
 
-export const getOrcaVaultGlobalRewardTokenVault = (name) => {
+export const getOrcaVaultGlobalRewardTokenVault = (name: string) => {
   const vaultAccount = find(
     orcaConfig.vault.accounts,
     (account) => account.name === name
@@ -440,7 +441,7 @@ export const getOrcaVaultGlobalRewardTokenVault = (name) => {
   return vaultAccount?.global_reward_token_vault;
 };
 
-export const getOrcaVaultConvertAuthority = (name) => {
+export const getOrcaVaultConvertAuthority = (name: string) => {
   const vaultAccount = find(
     orcaConfig.vault.accounts,
     (account) => account.name === name
@@ -449,7 +450,7 @@ export const getOrcaVaultConvertAuthority = (name) => {
   return vaultAccount?.convert_authority;
 };
 
-export const getOrcaVaultLpMint = (name) => {
+export const getOrcaVaultLpMint = (name: string) => {
   const vaultAccount = find(
     orcaConfig.vault.accounts,
     (account) => account.name === name
@@ -458,7 +459,7 @@ export const getOrcaVaultLpMint = (name) => {
   return vaultAccount?.swap_pool_token_mint;
 };
 
-export const getOrcaVaultSwapPoolTokenAccount = (name) => {
+export const getOrcaVaultSwapPoolTokenAccount = (name: string) => {
   const vaultAccount = find(
     orcaConfig.vault.accounts,
     (account) => account.name === name
@@ -467,7 +468,7 @@ export const getOrcaVaultSwapPoolTokenAccount = (name) => {
   return vaultAccount?.swap_pool_token_account;
 };
 
-export const getOrcaVaultRewardMint = (name) => {
+export const getOrcaVaultRewardMint = (name: string) => {
   const vaultAccount = find(
     orcaConfig.vault.accounts,
     (account) => account.name === name
@@ -476,7 +477,7 @@ export const getOrcaVaultRewardMint = (name) => {
   return vaultAccount?.reward_token_mint;
 };
 
-export const getOrcaVaultFeeAccount = (name) => {
+export const getOrcaVaultFeeAccount = (name: string) => {
   const vaultAccount = find(
     orcaConfig.vault.accounts,
     (account) => account.name === name
@@ -485,49 +486,49 @@ export const getOrcaVaultFeeAccount = (name) => {
   return vaultAccount?.orca_fee_account;
 };
 
-export const getOrcaFarmPoolId = (name) => {
+export const getOrcaFarmPoolId = (name: string) => {
   const farm = find(orcaConfig.farms, (farm) => farm.name === name);
 
   return farm?.poolId;
 };
 
-export const getOrcaLpMintAddress = (name) => {
+export const getOrcaLpMintAddress = (name: string) => {
   const farm = find(orcaConfig.farms, (farm) => farm.name === name);
 
   return farm?.lpMintAddress;
 };
 
-export const getOrcaFarmPoolLpTokenAccount = (name) => {
+export const getOrcaFarmPoolLpTokenAccount = (name: string) => {
   const farm = find(orcaConfig.farms, (farm) => farm.name === name);
 
   return farm?.poolLpTokenAccount;
 };
 
-export const getOrcaFarmPoolCoinTokenaccount = (name) => {
+export const getOrcaFarmPoolCoinTokenaccount = (name: string) => {
   const farm = find(orcaConfig.farms, (farm) => farm.name === name);
 
   return farm?.poolCoinTokenaccount;
 };
 
-export const getOrcaFarmPoolPcTokenaccount = (name) => {
+export const getOrcaFarmPoolPcTokenaccount = (name: string) => {
   const farm = find(orcaConfig.farms, (farm) => farm.name === name);
 
   return farm?.poolPcTokenaccount;
 };
 
-export const getOrcaFarmAmmId = (name) => {
+export const getOrcaFarmAmmId = (name: string) => {
   const farm = find(orcaConfig.farms, (farm) => farm.name === name);
 
   return farm?.ammId;
 };
 
-export const getOrcaFarmAmmAuthority = (name) => {
+export const getOrcaFarmAmmAuthority = (name: string) => {
   const farm = find(orcaConfig.farms, (farm) => farm.name === name);
 
   return farm?.ammAuthority;
 };
 
-export const getOrcaFarmAmmOpenOrders = (name) => {
+export const getOrcaFarmAmmOpenOrders = (name: string) => {
   const farm = find(orcaConfig.farms, (farm) => farm.name === name);
 
   return farm?.ammOpenOrders;
@@ -535,79 +536,79 @@ export const getOrcaFarmAmmOpenOrders = (name) => {
 //#endregion
 
 //#region Farm getters
-export const getFarmProgramId = (name) => {
+export const getFarmProgramId = (name: any) => {
   const farm = find(farmAccounts, (farm) => farm.name === name);
 
   return farm?.programId;
 };
 
-export const getFarmPoolId = (name) => {
+export const getFarmPoolId = (name: string) => {
   const farm = find(farmAccounts, (farm) => farm.name === name);
 
   return farm?.poolId;
 };
 
-export const getFarmPoolAuthority = (name) => {
+export const getFarmPoolAuthority = (name: any) => {
   const farm = find(farmAccounts, (farm) => farm.name === name);
 
   return farm?.poolAuthority;
 };
 
-export const getFarmLpMintAddress = (name) => {
+export const getFarmLpMintAddress = (name: any) => {
   const farm = find(farmAccounts, (farm) => farm.name === name);
 
   return farm?.lpMintAddress;
 };
 
-export const getFarmPoolLpTokenAccount = (name) => {
+export const getFarmPoolLpTokenAccount = (name: string) => {
   const farm = find(farmAccounts, (farm) => farm.name === name);
 
   return farm?.poolLpTokenAccount;
 };
 
-export const getFarmPoolRewardATokenAccount = (name) => {
+export const getFarmPoolRewardATokenAccount = (name: any) => {
   const farm = find(farmAccounts, (farm) => farm.name === name);
 
   return farm?.poolRewardATokenAccount;
 };
 
-export const getFarmPoolRewardBTokenAccount = (name) => {
+export const getFarmPoolRewardBTokenAccount = (name: any) => {
   const farm = find(farmAccounts, (farm) => farm.name === name);
 
   return farm?.poolRewardBTokenAccount;
 };
 
-export const getFarmFusion = (name) => {
+export const getFarmFusion = (name: any) => {
   const farm = find(farmAccounts, (farm) => farm.name === name);
 
   return farm?.fusion;
 };
 
-export const getFarmPoolCoinTokenaccount = (name) => {
+export const getFarmPoolCoinTokenaccount = (name: string) => {
   const farm = find(farmAccounts, (farm) => farm.name === name);
 
   return farm?.poolCoinTokenaccount;
 };
 
-export const getFarmPoolPcTokenaccount = (name) => {
+export const getFarmPoolPcTokenaccount = (name: string) => {
   const farm = find(farmAccounts, (farm) => farm.name === name);
 
   return farm?.poolPcTokenaccount;
 };
 
-export const getFarmAmmId = (name) => {
+export const getFarmAmmId = (name: string) => {
   const farm = find(farmAccounts, (farm) => farm.name === name);
 
   return farm?.ammId;
 };
 
-export const getFarmAmmOpenOrders = (name) => {
+export const getFarmAmmOpenOrders = (name: string) => {
   const farm = find(farmAccounts, (farm) => farm.name === name);
 
   return farm?.ammOpenOrders;
 };
 
-export const getFarmSerumProgramId = (name) => {
+export const getFarmSerumProgramId = (name: string) => {
   const farm = find(farmAccounts, (farm) => farm.name === name);
 
   return farm?.serumProgramId;
@@ -652,29 +653,29 @@ export const FARM_PLATFORMS = {
 export const getReserveByName = (name: string) =>
   find(LENDING_RESERVES, (reserve) => reserve.name === name);
 
-export const TOKEN_PROGRAM_ID = new anchor.web3.PublicKey(
+export const TOKEN_PROGRAM_ID = new PublicKey(
   "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
 );
-export const AQUAFARM_PROGRAM_ID = new anchor.web3.PublicKey(
+export const AQUAFARM_PROGRAM_ID = new PublicKey(
   "82yxjeMsvaURa4MbZZ7WZZHfobirZYkH1zF8fmeGtyaQ"
 );
 
 export async function deriveVaultUserAccount(
   vaultAccount: { toBuffer: () => Buffer | Uint8Array },
   authority: { toBuffer: () => Buffer | Uint8Array },
-  program: anchor.web3.PublicKey
+  program: PublicKey
 ) {
-  return anchor.web3.PublicKey.findProgramAddress(
+  return PublicKey.findProgramAddress(
     [vaultAccount.toBuffer(), authority.toBuffer()],
     program
   );
 }
 
 export function getOrcaPeriodRate(
-  globalFarm,
-  totalLiquidity,
-  decimals,
-  orcaPrice
+  globalFarm: { emissionsPerSecondNumerator: { toString: () => Decimal.Value; }; emissionsPerSecondDenominator: { toString: () => Decimal.Value; }; },
+  totalLiquidity: Decimal.Value | undefined,
+  decimals: Decimal.Value,
+  orcaPrice: Decimal.Value
 ) {
   return new Decimal(globalFarm.emissionsPerSecondNumerator.toString())
       .mul(60 * 60 * 24 * 100) // the 100 here is divided by 10 as its divided later, in the SDK it was 1000

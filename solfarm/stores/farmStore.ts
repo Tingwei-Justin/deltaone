@@ -15,7 +15,7 @@ import { commitment } from '../tulipService';
 const NUMBER_OF_PERIODS_IN_A_WEEK = 24 * 7,
   NUMBER_OF_PERIODS_IN_A_YEAR = 24 * 365;
 
-const orcaIdlJson = require('../idl/orca_idl.json');
+import { orcaConfig } from "../idl/orca_info";
 
 const getAPY = (periodicRate, numberOfPeriods) => {
   return (Math.pow((1 + (periodicRate/100)), numberOfPeriods) - 1);
@@ -83,7 +83,7 @@ export default class FarmStore {
 
 
     const orcaVaultProgramId = new anchor.web3.PublicKey(getOrcaVaultProgramId());
-    const orcaVaultProgram = new anchor.Program(orcaIdlJson, orcaVaultProgramId, provider);
+    const orcaVaultProgram = new anchor.Program(orcaConfig, orcaVaultProgramId, provider);
 
     // const pairs = await PriceFetcherService.fetchAll();
     const { getTokenPrice, getPair } = this.priceStore;

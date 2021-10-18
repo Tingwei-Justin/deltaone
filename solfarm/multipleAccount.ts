@@ -1,6 +1,8 @@
-import { struct } from "buffer-layout";
+import { Struct, struct } from 'superstruct';
 import { slice } from "lodash";
 import { getMultipleAccounts } from "./getMultipleAccounts";
+import { Connection } from '@solana/web3.js';
+import { PublicKey } from '@solana/web3.js';
 function jsonRpcResult(resultDescription: { context: any; value: any }) {
   const jsonRpcVersion = struct.literal("2.0");
 
@@ -19,7 +21,7 @@ function jsonRpcResult(resultDescription: { context: any; value: any }) {
   ]);
 }
 
-function jsonRpcResultAndContext(resultDescription) {
+function jsonRpcResultAndContext(resultDescription: Struct) {
   return jsonRpcResult({
     context: struct({
       slot: "number",
@@ -49,11 +51,11 @@ export const GetMultipleAccountsAndContextRpcResult = jsonRpcResultAndContext(
  *
  * @returns {Array[]}
  */
- export async function getMultipleAccountsGrouped(connection, publicKeyGroupedArray, commitment) {
-  let dataToFetch = [],
-    responseToReturn = [];
+ export async function getMultipleAccountsGrouped(connection: Connection | undefined, publicKeyGroupedArray: any[], commitment: string) {
+  let dataToFetch: any[] = [],
+    responseToReturn: ({ publicKey: any; account: { executable: any; owner: PublicKey; lamports: any; data: Buffer; }; } | null)[][] = [];
 
-  publicKeyGroupedArray.forEach((publicKeyArray) => {
+  publicKeyGroupedArray.forEach((publicKeyArray: any) => {
     dataToFetch = dataToFetch.concat(publicKeyArray);
   });
 
@@ -61,7 +63,7 @@ export const GetMultipleAccountsAndContextRpcResult = jsonRpcResultAndContext(
 
   let lastIndex = 0;
 
-  publicKeyGroupedArray.forEach((publicKeyArray) => {
+  publicKeyGroupedArray.forEach((publicKeyArray: string | any[]) => {
     responseToReturn.push(
       slice(dataFetched, lastIndex, lastIndex + publicKeyArray.length)
     );

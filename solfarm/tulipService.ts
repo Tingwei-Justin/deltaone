@@ -25,7 +25,7 @@ export default class TulipService{
     stores={}
     web3: Connection
     wallet: Wallet;
-    constructor(wallet){
+    constructor(wallet: Wallet){
         this.stores={}
         this.wallet = wallet;
         this.web3 = this.createWeb3Instance("https://solana-api.projectserum.com")
@@ -33,7 +33,7 @@ export default class TulipService{
         this.stores["FarmStore"] = new FarmStore(this.web3, this.stores["priceStore"])
 
     }
-    createWeb3Instance = (endpoint) => {
+    createWeb3Instance = (endpoint : string) => {
         const web3 = new Connection(endpoint, { commitment, wsEndpoint: endpoint });
         return web3;
       }
@@ -51,6 +51,8 @@ openMarginPosition = async (
     leverageValue: number,
     obligationIndex = -2
     ) => {
+    console.log('opening margin Position');
+    return
     const transactions = [];
 
     const farm = getFarmBySymbol(assetSymbol);
