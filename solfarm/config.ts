@@ -9,8 +9,8 @@ import {
 } from "../utils/layouts";
 import { LENDING_RESERVES } from "./lendingReserves";
 const config = require("../idl/info.json");
-const lendConfig = require("../idl/lending_info.json");
-const saberConfig = require("../idl/saber_info.json");
+const lendConfig = require("./idl/lending_info.json");
+const saberConfig = require("./idl/saber_info.json");
 const orcaConfig = require("../idl/orca_info.json");
 
 export const getVaultProgramId = () => config.programId;

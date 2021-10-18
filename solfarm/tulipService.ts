@@ -18,6 +18,7 @@ import { findUserFarmAddress, findObligationVaultAddress, findUserFarmObligation
 import { ACCOUNT_LAYOUT } from "../utils/layouts";
 import { getFarmBySymbol } from "./farms/farm";
 
+// This is what solfarm uses. 
 export const commitment: Commitment = "confirmed"
 
 export default class TulipService{
@@ -105,6 +106,7 @@ openMarginPosition = async (
         "11111111111111111111111111111111"
         ) {
         createAccounts = true;
+        // if there is no user farm already obligation - create one.
         transactions.push(this.createUserFarmObligation(assetSymbol, obligationIdx));
         extraSigners.push([]);
         }
@@ -139,7 +141,6 @@ openMarginPosition = async (
         quoteTokenAmount,
         leverageValue,
         obligationIdx,
-        createAccounts
         );
         transactions.push(depositBorrowTxn);
         extraSigners.push(signer);
@@ -189,9 +190,7 @@ createUserFarm = async (
       preflightCommitment: commitment,
     }),
     tulipTokenMint = new anchor.web3.PublicKey(TOKENS.TULIP.mintAddress),
-    farm = getFarmBySymbol(assetSymbol),
-    baseToken = farm.coins[0], // base / coin
-    quoteToken = farm.coins[1]; // quote / pc | @to-do: change coins[0] and coins[1] to baseToken and quoteToken
+    farm = getFarmBySymbol(assetSymbol);
   anchor.setProvider(provider);
 
   // Address of the deployed program.
@@ -216,6 +215,7 @@ createUserFarm = async (
     new anchor.BN(farm.marginIndex)
   );
 
+  // there is some obligation vault account? - but what is the obligation vault for?
   const [obligationVaultAccount, obligationVaultNonce] =
     await findObligationVaultAddress(
       userFarm,
@@ -258,6 +258,8 @@ createUserFarm = async (
 
   const instructions = [];
 
+  // if the user does not have an obligation lp token account - create one.
+  // but wtf is a obligationLPTokenAccount?
   if (!obligationLPTokenAccountInfo) {
     instructions.push(
       await serumAssoToken.createAssociatedTokenAccount(
@@ -320,9 +322,7 @@ createUserAccounts = async (
       skipPreflight: true,
       preflightCommitment: commitment,
     }),
-    farm = getFarmBySymbol(assetSymbol),
-    baseToken = farm.coins[0], // base / coin
-    quoteToken = farm.coins[1]; // quote / pc
+    farm = getFarmBySymbol(assetSymbol);
 
   anchor.setProvider(provider);
 
@@ -381,9 +381,7 @@ createUserFarmObligation = async (assetSymbol, obligationIdx) => {
       preflightCommitment: commitment,
     }),
     tulipTokenMint = new anchor.web3.PublicKey(TOKENS.TULIP.mintAddress),
-    farm = getFarmBySymbol(assetSymbol),
-    baseToken = farm.coins[0],
-    quoteToken = farm.coins[1];
+    farm = getFarmBySymbol(assetSymbol);
   anchor.setProvider(provider);
 
   // Address of the deployed program.
@@ -500,7 +498,6 @@ depositBorrow = async (
   quoteTokenAmount: number,
   leverageValue: number,
   obligationIdx: string | number | anchor.BN | number[] | Uint8Array | Buffer,
-  createAccounts: any
 ) => {
     const wallet = this.wallet,
     walletToInitialize = {
@@ -793,11 +790,11 @@ depositMarginLpTokens = async (
       // 1) The transaction signatures are verified
       // 2) The transaction is simulated against the bank slot specified by the preflight commitment. 
       skipPreflight: true,
-      // TODO: what is preflight commitment? 
+      // Commitment level to use for preflight 
       preflightCommitment: commitment,
     });
 
-  // TODO: what is setting a provider do?
+  // Sets the default provider on the client.
   anchor.setProvider(provider);
 
   // Address of the deployed program.
@@ -806,6 +803,7 @@ depositMarginLpTokens = async (
   // @ts-ignore
   const vaultProgram = new anchor.Program(farmIdl, vaultProgramId);
 
+  // FOR EXAMPLE: this is used to get the ORCA-USDC farm.
   const farm = getFarmBySymbol(assetSymbol),
     tulipTokenMint = new anchor.web3.PublicKey(TOKENS.TULIP.mintAddress);
 
@@ -817,6 +815,7 @@ depositMarginLpTokens = async (
     new anchor.BN(farm?.marginIndex)
   );
 
+  // TODO: what is the obligation vault account?
   const [obligationVaultAccount] = await findObligationVaultAddress(
     userFarm,
     new anchor.BN(obligationIdx), // userFarm has `numberOfObligations`, so we'll do `numberOfObligations + 1` here
@@ -827,12 +826,9 @@ depositMarginLpTokens = async (
     provider.wallet.publicKey,
     userFarm,
     new anchor.web3.PublicKey(getLendingFarmProgramId()),
+    // BN = BigNum in pure javascript
     new anchor.BN(obligationIdx) // userFarm has `numberOfObligations`, so we'll do `numberOfObligations + 1` here
   );
-
-  // console.log("user farm: ", userFarm.toString());
-  // console.log("user farm obligation (0): ", userObligationAcct1.toString());
-  // console.log("user farm obligation (0) vault account: ", obligationVaultAccount.toString());
 
   const vaultAccount = new anchor.web3.PublicKey(getVaultAccount(assetSymbol));
   const vaultPdaAccount = new anchor.web3.PublicKey(
