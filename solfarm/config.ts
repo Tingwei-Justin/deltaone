@@ -8,10 +8,10 @@ import {
   STAKE_INFO_LAYOUT_V4,
 } from "../utils/layouts";
 import { LENDING_RESERVES } from "./lendingReserves";
-const config = require("../idl/info.json");
-const lendConfig = require("./idl/lending_info.json");
-const saberConfig = require("./idl/saber_info.json");
-const orcaConfig = require("../idl/orca_info.json");
+import { config } from "./idl/config"
+import { lendConfig } from "./idl/lend_info"
+import { saberConfig } from "./idl/saber_info";
+import { orcaConfig } from "./idl/orca_info";
 
 export const getVaultProgramId = () => config.programId;
 export const getTokenProgramId = () => config.rayTokenProgramId;
