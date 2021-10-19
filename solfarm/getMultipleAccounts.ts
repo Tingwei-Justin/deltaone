@@ -3,12 +3,16 @@ import * as anchor from "@project-serum/anchor";
 
 import { GetMultipleAccountsAndContextRpcResult } from "./multipleAccount";
 
-export const getMultipleAccounts = async (connection?: anchor.web3.Connection, publicKeys: any[], commitment: any) => {
+export const getMultipleAccounts = async (
+    connection: anchor.web3.Connection,
+    publicKeys: PublicKey[],
+    commitment: any
+) => {
     if (!connection) {
         return;
     }
     const keys = [];
-    let tempKeys = [];
+    let tempKeys: string[] = [];
 
     publicKeys.forEach(k => {
         if (tempKeys.length >= 100) {
@@ -26,15 +30,9 @@ export const getMultipleAccounts = async (connection?: anchor.web3.Connection, p
 
     for (const key of keys) {
         const args = [key, { commitment }];
-        debugger;
 
-        try {
-            // @ts-ignore
-            const unsafeRes = await connection._rpcRequest("getMultipleAccounts", args);
-        } catch (error) {
-            debugger;
-            console.error(error);
-        }
+        // @ts-ignore
+        const unsafeRes = await connection._rpcRequest("getMultipleAccounts", args);
         const res = GetMultipleAccountsAndContextRpcResult(unsafeRes);
         debugger;
 

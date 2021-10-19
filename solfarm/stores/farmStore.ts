@@ -48,10 +48,12 @@ export default class FarmStore {
     farms: {};
     web3: anchor.web3.Connection;
     priceStore: any;
+    initiated: boolean;
     constructor(web3: anchor.web3.Connection | undefined, priceStore: any) {
         this.farms = {};
         this.web3 = web3;
         this.priceStore = priceStore;
+        this.initiated = false;
 
         this.getFarm = this.getFarm.bind(this);
 
@@ -167,28 +169,27 @@ export default class FarmStore {
             // orcaAmmOpenOrdersAccounts,
         ];
         const [
-                // Raydium
-                vaultAccountsInfo,
-                tokenSupplyForAllFarms,
-                poolInfo,
-                poolLpTokenAccountsInfo,
-                poolCoinTokenaccountsInfo,
-                poolPcTokenaccountsInfo,
-                ammIdAccountsInfo,
-                ammOpenOrdersAccountsInfo,
+            // Raydium
+            vaultAccountsInfo,
+            tokenSupplyForAllFarms,
+            poolInfo,
+            poolLpTokenAccountsInfo,
+            poolCoinTokenaccountsInfo,
+            poolPcTokenaccountsInfo,
+            ammIdAccountsInfo,
+            ammOpenOrdersAccountsInfo,
 
-                // Orca
-                orcaVaultAccountsInfo,
-                orcaMintAddressesInfo,
-                // orcaPoolIdsInfo,
-                // orcaPoolLpTokenAccountsInfo,
-                orcaPoolCoinTokenaccountsInfo,
-                orcaPoolPcTokenaccountsInfo,
-                orcaGlobalFarmsInfo,
-                // orcaAmmIdAccountsInfo,
-                // orcaAmmOpenOrdersAccountsInfo,
-            ] = await getMultipleAccountsGrouped(this.web3, accountDetailsToFetch, commitment),
-            tulipPrice = getTokenPrice(TOKENS.TULIP.symbol);
+            // Orca
+            orcaVaultAccountsInfo,
+            orcaMintAddressesInfo,
+            // orcaPoolIdsInfo,
+            // orcaPoolLpTokenAccountsInfo,
+            orcaPoolCoinTokenaccountsInfo,
+            orcaPoolPcTokenaccountsInfo,
+            orcaGlobalFarmsInfo,
+            // orcaAmmIdAccountsInfo,
+            // orcaAmmOpenOrdersAccountsInfo,
+        ] = await getMultipleAccountsGrouped(this.web3, accountDetailsToFetch, commitment);
 
         //#region Raydium Farms
         tokenSupplyForAllFarms.forEach((tokenSupply, index) => {
@@ -461,5 +462,6 @@ export default class FarmStore {
                 coinToPcRatio,
             });
         });
+        this.initiated = true;
     }
 }
