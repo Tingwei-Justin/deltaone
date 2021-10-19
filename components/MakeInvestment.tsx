@@ -107,8 +107,8 @@ const MakeInvestment = () => {
                                 type="submit"
                                 className="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
                                 onClick={() => {
-                                    // const testing = true;
-                                    const testing = false;
+                                    const testing = true;
+                                    // const testing = false;
                                     if (testing && wallet) {
                                         const tulipService = new TulipService(wallet);
                                         const params = {

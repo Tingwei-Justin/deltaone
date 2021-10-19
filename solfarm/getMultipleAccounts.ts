@@ -8,6 +8,7 @@ export const getMultipleAccounts = async (
   publicKeys: any[],
   commitment: any
 ) => {
+  debugger
   if(!connection){
     return
   }

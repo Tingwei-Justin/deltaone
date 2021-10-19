@@ -1,4 +1,3 @@
-import { observable, makeObservable, action,  } from 'mobx';
 import { isNil,  assign,  map,  } from 'lodash';
 import {TokenAmount} from "../../utils/token-amount"
 import * as anchor from '@project-serum/anchor';
@@ -15,7 +14,7 @@ import { commitment } from '../tulipService';
 const NUMBER_OF_PERIODS_IN_A_WEEK = 24 * 7,
   NUMBER_OF_PERIODS_IN_A_YEAR = 24 * 365;
 
-import { orcaConfig } from "../idl/orca_info";
+import { orcaConfig } from "../idl/orca_idl";
 
 const getAPY = (periodicRate: number, numberOfPeriods: number) => {
   return (Math.pow((1 + (periodicRate/100)), numberOfPeriods) - 1);
@@ -75,15 +74,7 @@ export default class FarmStore {
 
 
     const orcaVaultProgramId = new anchor.web3.PublicKey(getOrcaVaultProgramId());
-    debugger
-    try{
-      const orcaVaultProgram = new anchor.Program(orcaConfig, orcaVaultProgramId, provider);
-
-    } catch (e){
-      debugger
-      console.error(e)
-
-    }
+    const orcaVaultProgram = new anchor.Program(orcaConfig, orcaVaultProgramId, provider);
 
     // const pairs = await PriceFetcherService.fetchAll();
     const { getTokenPrice, getPair } = this.priceStore;
