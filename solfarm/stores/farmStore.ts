@@ -43,19 +43,13 @@ export default class FarmStore {
     this.web3 = web3;
     this.priceStore = priceStore;
 
-    makeObservable(this, {
-      farms: observable,
-      setFarm: action.bound,
-      setPrice: action.bound,
-    });
-
-
     this.getFarm = this.getFarm.bind(this);
 
     this.setPrice();
   }
 
-  getFarm (mintAddress) {
+  getFarm (mintAddress: string | number) {
+    debugger
     return this.farms[mintAddress];
   }
 
@@ -70,8 +64,6 @@ export default class FarmStore {
   }
 
   async setPrice () {
-    // return;
-
 
     const walletToInitialize = {
       signTransaction: () => {},
@@ -83,7 +75,15 @@ export default class FarmStore {
 
 
     const orcaVaultProgramId = new anchor.web3.PublicKey(getOrcaVaultProgramId());
-    const orcaVaultProgram = new anchor.Program(orcaConfig, orcaVaultProgramId, provider);
+    debugger
+    try{
+      const orcaVaultProgram = new anchor.Program(orcaConfig, orcaVaultProgramId, provider);
+
+    } catch (e){
+      debugger
+      console.error(e)
+
+    }
 
     // const pairs = await PriceFetcherService.fetchAll();
     const { getTokenPrice, getPair } = this.priceStore;
