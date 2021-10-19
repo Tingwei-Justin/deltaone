@@ -3,7 +3,6 @@ import * as serumAssoToken from "@project-serum/associated-token";
 import * as splToken from "@solana/spl-token";
 import * as serum from "@project-serum/serum";
 import { createAssociatedTokenAccount } from "@project-serum/associated-token";
-import { Wallet } from "@project-serum/anchor"
 import { findIndex } from "lodash"
 import { FarmDetails } from "./types"
 import FarmStore from "./stores/farmStore"
@@ -17,15 +16,26 @@ import { farmIdl } from "./levFarm"
 import { findUserFarmAddress, findObligationVaultAddress, findUserFarmObligationAddress, findLeveragedFarmAddress, findBorrowAuthorizer, findOrcaUserFarmAddress, findUserFarmManagerAddress } from "./levFarmUtils"
 import { ACCOUNT_LAYOUT } from "../utils/layouts";
 import { getFarmBySymbol } from "./farms/farm";
+import { AnchorWallet } from "@solana/wallet-adapter-react";
 
 // This is what solfarm uses. 
 export const commitment: Commitment = "confirmed"
 
+export interface OpenMarginPositionParams{
+
+   assetSymbol: string,
+    reserveName: string,
+    baseTokenAmount: number,
+    quoteTokenAmount: number,
+    leverageValue: number,
+    obligationIndex?: number
+}
 export default class TulipService{
+
     stores={}
     web3: Connection
-    wallet: Wallet;
-    constructor(wallet: Wallet){
+    wallet: AnchorWallet;
+    constructor(wallet: AnchorWallet){
         this.stores={}
         this.wallet = wallet;
         this.web3 = this.createWeb3Instance("https://solana-api.projectserum.com")
@@ -42,17 +52,15 @@ export default class TulipService{
         return this.stores[storeName]
     }
 
-openMarginPosition = async (
-    wallet: Wallet,
-    assetSymbol: string,
-    reserveName: string,
-    baseTokenAmount: number,
-    quoteTokenAmount: number,
-    leverageValue: number,
+openMarginPosition = async ({
+    assetSymbol,
+    reserveName,
+    baseTokenAmount,
+    quoteTokenAmount,
+    leverageValue,
     obligationIndex = -2
-    ) => {
-    console.log('opening margin Position');
-    return
+}: OpenMarginPositionParams) => {
+    debugger
     const transactions = [];
 
     const farm = getFarmBySymbol(assetSymbol);
@@ -171,7 +179,7 @@ openMarginPosition = async (
     const fulfilledTransactions = await Promise.all(transactions);
     return sendAllTransactions(
         this.web3,
-        wallet,
+        this.wallet,
         fulfilledTransactions,
         [],
         extraSigners

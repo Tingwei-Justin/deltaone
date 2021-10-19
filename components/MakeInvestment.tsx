@@ -1,5 +1,4 @@
-import { RadioGroup } from "@headlessui/react";
-import { useWallet } from "@solana/wallet-adapter-react";
+import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
 import axios from "axios";
 import React, { useEffect } from "react";
 import { useState } from "react";
@@ -7,7 +6,7 @@ import { connection } from "../config/config";
 
 import { USDollarFormatter } from "../utils/utils";
 import { getSOLBalance } from "../utils/wallet";
-import { TulipService } from "../solfarm/tulipService";
+import TulipService from "../solfarm/tulipService";
 
 interface SolanaConversion {
     usd: number;
@@ -18,7 +17,8 @@ interface CoinGeckoResponse {
 const MakeInvestment = () => {
     const [contributionPercentage, setContributionPercentage] = useState(100);
     const [usdcBalance, setUSDCBalance] = useState<number>(0);
-    const { publicKey, wallet } = useWallet();
+    const { publicKey } = useWallet();
+    const wallet = useAnchorWallet();
 
     const slippage = 0.01;
 
@@ -109,8 +109,17 @@ const MakeInvestment = () => {
                                 onClick={() => {
                                     // const testing = true;
                                     const testing = false;
-                                    if (testing) {
+                                    if (testing && wallet) {
                                         const tulipService = new TulipService(wallet);
+                                        const params = {
+                                            assetSymbol: "RAY-USDT",
+                                            reserveName: "USDT",
+                                            baseTokenAmount: 0,
+                                            quoteTokenAmount: 0,
+                                            leverageValue: 3,
+                                        };
+                                        tulipService.openMarginPosition(params);
+                                        debugger;
                                     } else {
                                         alert("Only for beta users. Join Discord to join beta.");
                                     }
