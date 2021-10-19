@@ -17,12 +17,12 @@ const NUMBER_OF_PERIODS_IN_A_WEEK = 24 * 7,
 
 import { orcaConfig } from "../idl/orca_info";
 
-const getAPY = (periodicRate, numberOfPeriods) => {
+const getAPY = (periodicRate: number, numberOfPeriods: number) => {
   return (Math.pow((1 + (periodicRate/100)), numberOfPeriods) - 1);
 }
 
 
-const getPerBlockAmountTotalValue = (perBlockAmount, price) => {
+const getPerBlockAmountTotalValue = (perBlockAmount: number, price: number) => {
   return (
     perBlockAmount  *
     2 *
@@ -38,7 +38,7 @@ export default class FarmStore {
   farms: {};
   web3: undefined;
   priceStore: any;
-  constructor (web3, priceStore) {
+  constructor (web3: anchor.web3.Connection | undefined, priceStore: any) {
     this.farms = {};
     this.web3 = web3;
     this.priceStore = priceStore;
@@ -53,7 +53,7 @@ export default class FarmStore {
     return this.farms[mintAddress];
   }
 
-  setFarm (mintAddress, farmDetails) {
+  setFarm (mintAddress: string, farmDetails: { dailyAPR: number; price: number; weeklyAPY: number; yearlyAPY: number; yieldBreakdown: { dailyYield: number; weeklyYield: number; yearlyYield: number; dailyTradingFees: number; } | { dailyYield: number; weeklyYield: number; yearlyYield: number; dailyTradingFees: number; }; tulipAPR: number; baseTokenTotal?: any; quoteTokenTotal?: any; needTakePnlCoin?: any; needTakePnlPc?: any; tvl: number; totalVaultBalance: any; totalVlpShares: any; coinInLp: number | undefined; pcInLp: number | undefined; coinToPcRatio?: number | undefined; }) {
     if (!mintAddress || isNil(farmDetails)) {
       return;
     }
