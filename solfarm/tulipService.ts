@@ -86,14 +86,9 @@ export default class TulipService {
         this.stores = {};
         this.wallet = wallet;
         this.web3 = this.createWeb3Instance("https://solana-api.projectserum.com");
-        this.stores["PriceStore"] = new PriceStore();
+        this.stores.PriceStore = new PriceStore();
         const farmStore = new FarmStore(this.web3, this.stores["PriceStore"]);
-        while (!farmStore.initiated) {
-            console.log("not initated...");
-            sleep(10);
-        }
-        console.log("initiated...");
-        this.stores["FarmStore"] = farmStore;
+        this.stores.FarmStore = farmStore;
     }
     createWeb3Instance = (endpoint: string) => {
         const web3 = new Connection(endpoint, { commitment, wsEndpoint: endpoint });
