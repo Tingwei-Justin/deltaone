@@ -28,7 +28,13 @@ export const getMultipleAccounts = async (connection?: anchor.web3.Connection, p
         const args = [key, { commitment }];
         debugger;
 
-        const unsafeRes = await connection.rpcRequest("getMultipleAccounts", args);
+        try {
+            // @ts-ignore
+            const unsafeRes = await connection._rpcRequest("getMultipleAccounts", args);
+        } catch (error) {
+            debugger;
+            console.error(error);
+        }
         const res = GetMultipleAccountsAndContextRpcResult(unsafeRes);
         debugger;
 
