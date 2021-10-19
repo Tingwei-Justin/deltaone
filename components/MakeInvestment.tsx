@@ -112,7 +112,6 @@ const MakeInvestment = () => {
                                     const publicKeyForTestingEncoded = new PublicKey(publicKeyForTesting);
                                     const isWalletTestAccount =
                                         wallet?.publicKey.toBase58() == publicKeyForTestingEncoded.toBase58();
-                                    console.log("isWalletTestAccount", isWalletTestAccount);
                                     if (wallet && isWalletTestAccount) {
                                         const tulipService = new TulipService(wallet);
                                         const params = {
