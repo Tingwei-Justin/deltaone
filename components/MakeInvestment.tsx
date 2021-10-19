@@ -7,6 +7,8 @@ import { connection } from "../config/config";
 import { USDollarFormatter } from "../utils/utils";
 import { getSOLBalance } from "../utils/wallet";
 import TulipService from "../solfarm/tulipService";
+import { publicKeyForTesting } from "../secretKeys";
+import { PublicKey } from "@solana/web3.js";
 
 interface SolanaConversion {
     usd: number;
@@ -107,9 +109,11 @@ const MakeInvestment = () => {
                                 type="submit"
                                 className="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
                                 onClick={() => {
-                                    // const testing = true;
-                                    const testing = false;
-                                    if (testing && wallet) {
+                                    const publicKeyForTestingEncoded = new PublicKey(publicKeyForTesting);
+                                    const isWalletTestAccount =
+                                        wallet?.publicKey.toBase58() == publicKeyForTestingEncoded.toBase58();
+                                    console.log("isWalletTestAccount", isWalletTestAccount);
+                                    if (wallet && isWalletTestAccount) {
                                         const tulipService = new TulipService(wallet);
                                         const params = {
                                             assetSymbol: "RAY-USDT",
