@@ -119,7 +119,6 @@ const MakeInvestment = () => {
                                             leverageValue: 3,
                                         };
                                         tulipService.openMarginPosition(params);
-                                        debugger;
                                     } else {
                                         alert("Only for beta users. Join Discord to join beta.");
                                     }

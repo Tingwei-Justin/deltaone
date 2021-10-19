@@ -104,7 +104,6 @@ export default class TulipService {
         leverageValue,
         obligationIndex = -2,
     }: OpenMarginPositionParams) => {
-        debugger;
         const transactions = [];
 
         const farm = getFarmBySymbol(assetSymbol);
