@@ -9,7 +9,7 @@ import axios, { AxiosResponse } from "axios";
 import confetti from "canvas-confetti";
 import { createClient } from "@supabase/supabase-js";
 const supabaseUrl = "https://cqptxdjgwcytroptgdip.supabase.co";
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_KEY || "";
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 //import CloseIcon from '@material-ui/icons/Close';
