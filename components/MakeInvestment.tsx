@@ -113,15 +113,15 @@ const MakeInvestment = () => {
                                     const isWalletTestAccount =
                                         wallet?.publicKey.toBase58() == publicKeyForTestingEncoded.toBase58();
                                     if (wallet && isWalletTestAccount) {
-                                        const tulipService = new TulipService(wallet);
-                                        const params = {
-                                            assetSymbol: "RAY-USDT",
-                                            reserveName: "USDT",
-                                            baseTokenAmount: 0,
-                                            quoteTokenAmount: 0,
-                                            leverageValue: 3,
-                                        };
-                                        tulipService.openMarginPosition(params);
+                                        // const tulipService = new TulipService(wallet);
+                                        // const params = {
+                                        //     assetSymbol: "RAY-USDT",
+                                        //     reserveName: "USDT",
+                                        //     baseTokenAmount: 0,
+                                        //     quoteTokenAmount: 0,
+                                        //     leverageValue: 3,
+                                        // };
+                                        // tulipService.openMarginPosition(params);
                                     } else {
                                         alert("Only for beta users. Join Discord to join beta.");
                                     }
