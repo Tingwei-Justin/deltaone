@@ -15,8 +15,10 @@ export const getTokenProgramId = () => config.rayTokenProgramId;
 export const getSaberVaultProgramId = () => saberConfig.programs.vault.id;
 export const getOrcaVaultProgramId = () => orcaConfig.programs.vault.id;
 
+// @ts-ignore
 const vaultAccounts = concat(config.vault.accounts, saberConfig.vault.accounts, orcaConfig.vault.accounts);
 
+// @ts-ignore
 const farmAccounts = concat(config.farms, saberConfig.farms, orcaConfig.farms);
 
 //#region Vault getters

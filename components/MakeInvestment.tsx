@@ -6,7 +6,7 @@ import { connection } from "../config/config";
 
 import { USDollarFormatter } from "../utils/utils";
 import { getSOLBalance } from "../utils/wallet";
-import TulipService from "../solfarm/tulipService";
+// import TulipService from "../solfarm/tulipService";
 import { publicKeyForTesting } from "../secretKeys";
 import { PublicKey } from "@solana/web3.js";
 
