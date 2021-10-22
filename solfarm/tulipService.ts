@@ -1,4 +1,5 @@
-import anchor, { Provider } from "@project-serum/anchor";
+import * as anchor from "@project-serum/anchor";
+import { Provider } from "@project-serum/anchor";
 import * as serumAssoToken from "@project-serum/associated-token";
 import * as splToken from "@solana/spl-token";
 import * as serum from "@project-serum/serum";
@@ -236,7 +237,6 @@ export default class TulipService {
             skipPreflight: true,
             preflightCommitment: commitment,
         });
-        debugger;
         const tulipTokenMint = new PublicKey(TOKENS.TULIP.mintAddress);
         const farm = getFarmBySymbol(assetSymbol);
         anchor.setProvider(provider);
