@@ -1,81 +1,84 @@
-import { observable, makeObservable, action } from 'mobx';
-import { assign } from 'lodash';
-import {PriceFetcherService} from "../service/priceFetcherService"
-import { getFarmBySymbol } from '../farms/farm';
+import { observable, makeObservable, action } from "mobx";
+import { assign } from "lodash";
+import { PriceFetcherService } from "../service/priceFetcherService";
+import { getFarmBySymbol } from "../farms/farm";
 
 export default class PriceStore {
-  tokensPrice: {};
-  pairs: {};
+    tokensPrice: {};
+    pairs: {};
 
-  constructor () {
-    this.tokensPrice = {};
-    this.pairs = {};
+    constructor() {
+        this.tokensPrice = {};
+        this.pairs = {};
 
-    makeObservable(this, {
-      tokensPrice: observable,
-      pairs: observable,
-      setTokensPrice: action.bound,
-      setPairs: action.bound
-    });
+        makeObservable(this, {
+            tokensPrice: observable,
+            pairs: observable,
+            setTokensPrice: action.bound,
+            setPairs: action.bound,
+        });
 
-    this.getTokenPrice = this.getTokenPrice.bind(this);
-    this.getPair = this.getPair.bind(this);
+        this.getTokenPrice = this.getTokenPrice.bind(this);
+        this.getPair = this.getPair.bind(this);
 
-    this.init();
-  }
-
-  async init () {
-    const [tokensPrice, pairs, orcaPairs] = await Promise.all([
-      PriceFetcherService.fetchTokenPrice(),
-      PriceFetcherService.fetchAll(),
-      PriceFetcherService.fetchOrcaPairs()
-    ]);
-
-    this.setTokensPrice(tokensPrice);
-
-    const pairsToStore = {};
-
-    for (const [_, pair] of Object.entries(pairs)) {
-      // @ts-ignore
-      pairsToStore[pair.lp_mint] = pair;
+        this.init();
     }
 
-    for (const [assetSymbol, pair] of Object.entries(orcaPairs)) {
-      const farm = getFarmBySymbol(assetSymbol);
-      pairsToStore[farm.mintAddress] = pair;
+    async init() {
+        const [tokensPrice, pairs, orcaPairs] = await Promise.all([
+            PriceFetcherService.fetchTokenPrice(),
+            PriceFetcherService.fetchAll(),
+            PriceFetcherService.fetchOrcaPairs(),
+        ]);
+
+        this.setTokensPrice(tokensPrice);
+
+        const pairsToStore = {};
+
+        for (const [_, pair] of Object.entries(pairs)) {
+            // @ts-ignore
+            pairsToStore[pair.lp_mint] = pair;
+        }
+
+        for (const [assetSymbol, pair] of Object.entries(orcaPairs)) {
+            console.log("getting farm", assetSymbol);
+            const farm = getFarmBySymbol(assetSymbol);
+            if (farm?.mintAddress) {
+                pairsToStore[farm.mintAddress] = pair;
+            }
+        }
+        // pairs.forEach((pair) => {
+        //   pairsToStore[pair.lp_mint] = pair;
+        // });
+
+        this.setPairs(pairsToStore);
     }
-    // pairs.forEach((pair) => {
-    //   pairsToStore[pair.lp_mint] = pair;
-    // });
 
-    this.setPairs(pairsToStore);
-  }
+    getTokenPrice(name: string) {
+        //TOOO: write a proper map for conversion
+        if (name === "mSOL" || name === "SOCN") {
+            name = "SOL";
+        }
 
-  getTokenPrice (name) {
-    //TOOO: write a proper map for conversion
-    if (name === "mSOL" || name === "SOCN") {
-      name = "SOL";
+        if (name === "whETH") {
+            name = "ETH";
+        }
+        return this.tokensPrice[name];
     }
 
-    if (name === "whETH") {
-      name = "ETH"
+    setTokenPrice(token: any, price: any) {
+        assign(this.tokensPrice, { [token]: price });
     }
-    return this.tokensPrice[name];
-  }
 
-  setTokenPrice (token, price) {
-    assign(this.tokensPrice, { [token]: price });
-  }
+    setTokensPrice(tokensPrice: any) {
+        assign(this.tokensPrice, tokensPrice);
+    }
 
-  setTokensPrice (tokensPrice) {
-    assign(this.tokensPrice, tokensPrice);
-  }
+    getPair(name: string | number) {
+        return this.pairs[name];
+    }
 
-  getPair (name) {
-    return this.pairs[name];
-  }
-
-  setPairs (pairs) {
-    this.pairs = pairs;
-  }
+    setPairs(pairs: {}) {
+        this.pairs = pairs;
+    }
 }

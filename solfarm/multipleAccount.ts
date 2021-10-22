@@ -1,8 +1,8 @@
 import { Struct, struct } from "superstruct";
-import { slice } from "lodash";
+import { List, slice } from "lodash";
 import { getMultipleAccounts } from "./getMultipleAccounts";
 import * as anchor from "@project-serum/anchor";
-import { PublicKey } from "@solana/web3.js";
+import { Commitment, PublicKey } from "@solana/web3.js";
 function jsonRpcResult(resultDescription: { context: any; value: any }) {
     const jsonRpcVersion = struct.literal("2.0");
 
@@ -54,7 +54,7 @@ export const GetMultipleAccountsAndContextRpcResult = jsonRpcResultAndContext(
 export async function getMultipleAccountsGrouped(
     connection: anchor.web3.Connection,
     publicKeyGroupedArray: any[],
-    commitment: string
+    commitment: Commitment
 ) {
     let dataToFetch: any[] = [],
         responseToReturn: ({
@@ -65,7 +65,8 @@ export async function getMultipleAccountsGrouped(
     publicKeyGroupedArray.forEach(publicKeyArray => {
         dataToFetch = dataToFetch.concat(publicKeyArray);
     });
-    const dataFetched = await getMultipleAccounts(connection, dataToFetch, commitment);
+    let dataFetched: List<any> | null | undefined = [];
+    dataFetched = await getMultipleAccounts(connection, dataToFetch, commitment);
 
     let lastIndex = 0;
 

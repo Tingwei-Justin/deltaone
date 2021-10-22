@@ -22,10 +22,29 @@ interface CoinGeckoResponse {
 const MakeInvestment = () => {
     const [contributionPercentage, setContributionPercentage] = useState(100);
     const [usdcBalance, setUSDCBalance] = useState<number>(0);
+    const [farmStoreInitiated, setFarmStoreInitiated] = useState(false);
+    const [investmentInitiated, setInvestmentInitiated] = useState(false);
+    const [tulipService, setTulipService] = useState<TulipService>();
     const { publicKey } = useWallet();
     const wallet = useAnchorWallet();
 
     const slippage = 0.01;
+
+    useEffect(() => {
+        if (farmStoreInitiated && investmentInitiated && tulipService) {
+            debugger;
+            const params = {
+                assetSymbol: "RAY-USDT",
+                reserveName: "USDT",
+                baseTokenAmount: 0,
+                quoteTokenAmount: 0,
+                leverageValue: 3,
+            };
+            // try to open a margin position, on RAY-USDT.
+            // GOAL is to get this function working:
+            tulipService.openMarginPosition(params);
+        }
+    }, [farmStoreInitiated, investmentInitiated, tulipService]);
 
     useEffect(() => {
         async function initialize() {
@@ -117,23 +136,11 @@ const MakeInvestment = () => {
                                         wallet?.publicKey.toBase58() == publicKeyForTestingEncoded.toBase58();
                                     // if you have a wallet and it is whitelisted go ahead and try to make a position.
                                     if (wallet && isWalletTestAccount) {
+                                        setInvestmentInitiated(true);
                                         // Tulip Service owns connecting to tulip protocol.
                                         // construct tulip service.
-                                        debugger;
-                                        const tulipService = new TulipService(wallet);
-                                        const params = {
-                                            assetSymbol: "RAY-USDT",
-                                            reserveName: "USDT",
-                                            baseTokenAmount: 0,
-                                            quoteTokenAmount: 0,
-                                            leverageValue: 3,
-                                        };
-                                        // try to open a margin position, on RAY-USDT.
-                                        // GOAL is to get this function working:
-                                        debugger;
-                                        tulipService.openMarginPosition(params);
+                                        setTulipService(new TulipService(wallet, setFarmStoreInitiated));
                                     } else {
-                                        // if not, give this alert.
                                         alert("Only for beta users. Join Discord to join beta.");
                                     }
                                 }}>

@@ -35,6 +35,7 @@ const NUMBER_OF_PERIODS_IN_A_WEEK = 24 * 7,
     NUMBER_OF_PERIODS_IN_A_YEAR = 24 * 365;
 
 import { orcaConfig } from "../idl/orca_idl";
+import { Dispatch, SetStateAction } from "react";
 
 const getAPY = (periodicRate: number, numberOfPeriods: number) => {
     return Math.pow(1 + periodicRate / 100, numberOfPeriods) - 1;
@@ -49,7 +50,11 @@ export default class FarmStore {
     web3: anchor.web3.Connection;
     priceStore: any;
     initiated: boolean;
-    constructor(web3: anchor.web3.Connection | undefined, priceStore: any) {
+    constructor(
+        web3: anchor.web3.Connection | undefined,
+        priceStore: any,
+        setFarmStoreInitiated: Dispatch<SetStateAction<boolean>>
+    ) {
         this.farms = {};
         this.web3 = web3;
         this.priceStore = priceStore;
@@ -57,8 +62,7 @@ export default class FarmStore {
 
         this.getFarm = this.getFarm.bind(this);
 
-        debugger;
-        this.setPrice();
+        this.setPrice(setFarmStoreInitiated);
     }
 
     getFarm(mintAddress: string | number) {
@@ -97,7 +101,7 @@ export default class FarmStore {
         assign(this.farms[mintAddress], farmDetails);
     }
 
-    async setPrice() {
+    async setPrice(setFarmStoreInitiated: Dispatch<SetStateAction<boolean>>) {
         const walletToInitialize = {
             signTransaction: () => {},
             signAllTransactions: () => {},
@@ -169,7 +173,6 @@ export default class FarmStore {
             // orcaAmmIdAccounts,
             // orcaAmmOpenOrdersAccounts,
         ];
-        debugger;
         const [
             // Raydium
             vaultAccountsInfo,
@@ -465,5 +468,6 @@ export default class FarmStore {
             });
         });
         this.initiated = true;
+        setFarmStoreInitiated(true);
     }
 }

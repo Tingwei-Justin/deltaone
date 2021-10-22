@@ -65,6 +65,7 @@ import {
 import { ACCOUNT_LAYOUT } from "../utils/layouts";
 import { getFarmBySymbol } from "./farms/farm";
 import { AnchorWallet } from "@solana/wallet-adapter-react";
+import { Dispatch, SetStateAction } from "react";
 
 // This is what solfarm uses.
 export const commitment: Commitment = "confirmed";
@@ -82,12 +83,12 @@ export default class TulipService {
     stores: { [name: string]: FarmStore | PriceStore };
     web3: Connection;
     wallet: AnchorWallet;
-    constructor(wallet: AnchorWallet) {
+    constructor(wallet: AnchorWallet, setFarmStoreInitiated: Dispatch<SetStateAction<boolean>>) {
         this.stores = {};
         this.wallet = wallet;
         this.web3 = this.createWeb3Instance("https://solana-api.projectserum.com");
         this.stores.PriceStore = new PriceStore();
-        const farmStore = new FarmStore(this.web3, this.stores["PriceStore"]);
+        const farmStore = new FarmStore(this.web3, this.stores["PriceStore"], setFarmStoreInitiated);
         this.stores.FarmStore = farmStore;
     }
     createWeb3Instance = (endpoint: string) => {
