@@ -1,1 +1,1 @@
-export const publicKeyForTesting = "DAVf2GAzgzGnHQw5xHVm6DcXR4NskGhMp2nu9tDW5nEj";
+export const publicKeyForTesting = "8jUBeKs653Pt4KhTYT1DbvC98UgUHytLMwxuZq621C66";
