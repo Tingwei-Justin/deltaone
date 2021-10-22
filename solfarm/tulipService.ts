@@ -239,8 +239,10 @@ export default class TulipService {
         });
         const tulipTokenMint = new PublicKey(TOKENS.TULIP.mintAddress);
         const farm = getFarmBySymbol(assetSymbol);
+        debugger;
         anchor.setProvider(provider);
 
+        debugger;
         // Address of the deployed program.
         const farmProgramId = new PublicKey(getLendingFarmProgramId());
         // Generate the program client from IDL.
