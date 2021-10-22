@@ -31,6 +31,11 @@ const MakeInvestment = () => {
     const slippage = 0.01;
 
     useEffect(() => {
+        if (!tulipService && wallet) {
+            setTulipService(new TulipService(wallet, setFarmStoreInitiated));
+        }
+    }, [wallet]);
+    useEffect(() => {
         if (farmStoreInitiated && investmentInitiated && tulipService) {
             debugger;
             const params = {
@@ -140,7 +145,6 @@ const MakeInvestment = () => {
                                         setInvestmentInitiated(true);
                                         // Tulip Service owns connecting to tulip protocol.
                                         // construct tulip service.
-                                        setTulipService(new TulipService(wallet, setFarmStoreInitiated));
                                     } else {
                                         alert("Only for beta users. Join Discord to join beta.");
                                     }
