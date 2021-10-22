@@ -79,23 +79,28 @@ export interface OpenMarginPositionParams {
     obligationIndex?: number;
 }
 
+export enum StoreTypes {
+    FarmStore = "FarmStore",
+    PriceStore = "PriceStore",
+}
+
 export default class TulipService {
-    stores: { [name: string]: FarmStore | PriceStore };
+    stores: { [StoreTypes.FarmStore]?: FarmStore; [StoreTypes.PriceStore]?: PriceStore };
     web3: Connection;
     wallet: AnchorWallet;
     constructor(wallet: AnchorWallet, setFarmStoreInitiated: Dispatch<SetStateAction<boolean>>) {
         this.stores = {};
         this.wallet = wallet;
         this.web3 = this.createWeb3Instance("https://solana-api.projectserum.com");
-        this.stores.PriceStore = new PriceStore();
-        const farmStore = new FarmStore(this.web3, this.stores["PriceStore"], setFarmStoreInitiated);
-        this.stores.FarmStore = farmStore;
+        this.stores[StoreTypes.PriceStore] = new PriceStore();
+        const farmStore = new FarmStore(this.web3, this.stores[StoreTypes.PriceStore], setFarmStoreInitiated);
+        this.stores[StoreTypes.FarmStore] = farmStore;
     }
     createWeb3Instance = (endpoint: string) => {
         const web3 = new Connection(endpoint, { commitment, wsEndpoint: endpoint });
         return web3;
     };
-    getStore = (storeName: string) => {
+    getStore = (storeName: StoreTypes) => {
         return this.stores[storeName];
     };
 
@@ -109,11 +114,14 @@ export default class TulipService {
     }: OpenMarginPositionParams) => {
         const transactions = [];
 
+        if (!this.stores.FarmStore) {
+            return;
+        }
         const farm = getFarmBySymbol(assetSymbol);
         if (farm === undefined) {
             return;
         }
-        const farmDetails: FarmDetails = this.getStore("FarmStore").getFarm(farm.mintAddress);
+        const farmDetails: FarmDetails = this.stores.FarmStore.getFarm(farm.mintAddress);
         const { userFarmInfo } = farmDetails || {};
         const { obligations } = userFarmInfo || {};
 
@@ -580,7 +588,7 @@ export default class TulipService {
             // new anchor.web3.PublicKey(getLendingReserve(reserveNotBorrowing.symbol).account)
         ];
 
-        const { getTokenPrice } = this.getStore("PriceStore");
+        const { getTokenPrice } = this.getStore(StoreTypes.PriceStore);
 
         const baseTokenPrice = Number(getTokenPrice(baseToken.symbol)),
             quoteTokenPrice = Number(getTokenPrice(quoteToken.symbol)),

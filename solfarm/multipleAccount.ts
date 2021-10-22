@@ -66,6 +66,7 @@ export async function getMultipleAccountsGrouped(
         dataToFetch = dataToFetch.concat(publicKeyArray);
     });
     let dataFetched: List<any> | null | undefined = [];
+    debugger;
     dataFetched = await getMultipleAccounts(connection, dataToFetch, commitment);
 
     let lastIndex = 0;
