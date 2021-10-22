@@ -25,16 +25,19 @@ const MakeInvestment = () => {
     const [farmStoreInitiated, setFarmStoreInitiated] = useState(false);
     const [investmentInitiated, setInvestmentInitiated] = useState(false);
     const [tulipService, setTulipService] = useState<TulipService>();
+    const [startedSettingUpTulipService, setStartedSettingUpTulipService] = useState(false);
     const { publicKey } = useWallet();
     const wallet = useAnchorWallet();
 
     const slippage = 0.01;
 
     useEffect(() => {
-        if (!tulipService && wallet) {
+        if (!tulipService && wallet && !startedSettingUpTulipService) {
+            setStartedSettingUpTulipService(true);
             setTulipService(new TulipService(wallet, setFarmStoreInitiated));
         }
     }, [wallet]);
+
     useEffect(() => {
         if (farmStoreInitiated && investmentInitiated && tulipService) {
             debugger;
