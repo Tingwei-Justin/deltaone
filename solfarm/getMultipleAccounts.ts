@@ -31,6 +31,7 @@ export const getMultipleAccounts = async (
     for (const key of keys) {
         const args = [key, { commitment }];
 
+        debugger;
         // @ts-ignore
         const unsafeRes = await connection._rpcRequest("getMultipleAccounts", args);
         const res = GetMultipleAccountsAndContextRpcResult(unsafeRes);

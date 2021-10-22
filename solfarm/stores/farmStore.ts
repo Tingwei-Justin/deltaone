@@ -57,6 +57,7 @@ export default class FarmStore {
 
         this.getFarm = this.getFarm.bind(this);
 
+        debugger;
         this.setPrice();
     }
 
@@ -168,6 +169,7 @@ export default class FarmStore {
             // orcaAmmIdAccounts,
             // orcaAmmOpenOrdersAccounts,
         ];
+        debugger;
         const [
             // Raydium
             vaultAccountsInfo,

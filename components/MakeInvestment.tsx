@@ -6,9 +6,12 @@ import { connection } from "../config/config";
 
 import { USDollarFormatter } from "../utils/utils";
 import { getSOLBalance } from "../utils/wallet";
-// import TulipService from "../solfarm/tulipService";
+import TulipService from "../solfarm/tulipService";
 import { publicKeyForTesting } from "../secretKeys";
 import { PublicKey } from "@solana/web3.js";
+
+// Make investment, shows how much SOL you have in your wallet.
+// It tries to open a position using Tulip Protocol.
 
 interface SolanaConversion {
     usd: number;
@@ -112,17 +115,25 @@ const MakeInvestment = () => {
                                     const publicKeyForTestingEncoded = new PublicKey(publicKeyForTesting);
                                     const isWalletTestAccount =
                                         wallet?.publicKey.toBase58() == publicKeyForTestingEncoded.toBase58();
+                                    // if you have a wallet and it is whitelisted go ahead and try to make a position.
                                     if (wallet && isWalletTestAccount) {
-                                        // const tulipService = new TulipService(wallet);
-                                        // const params = {
-                                        //     assetSymbol: "RAY-USDT",
-                                        //     reserveName: "USDT",
-                                        //     baseTokenAmount: 0,
-                                        //     quoteTokenAmount: 0,
-                                        //     leverageValue: 3,
-                                        // };
-                                        // tulipService.openMarginPosition(params);
+                                        // Tulip Service owns connecting to tulip protocol.
+                                        // construct tulip service.
+                                        debugger;
+                                        const tulipService = new TulipService(wallet);
+                                        const params = {
+                                            assetSymbol: "RAY-USDT",
+                                            reserveName: "USDT",
+                                            baseTokenAmount: 0,
+                                            quoteTokenAmount: 0,
+                                            leverageValue: 3,
+                                        };
+                                        // try to open a margin position, on RAY-USDT.
+                                        // GOAL is to get this function working:
+                                        debugger;
+                                        tulipService.openMarginPosition(params);
                                     } else {
+                                        // if not, give this alert.
                                         alert("Only for beta users. Join Discord to join beta.");
                                     }
                                 }}>
