@@ -49,7 +49,6 @@ const MakeInvestment = () => {
             };
             // try to open a margin position, on RAY-USDT.
             // GOAL is to get this function working:
-            debugger;
             tulipService.openMarginPosition(params);
         }
     }, [farmStoreInitiated, investmentInitiated, tulipService]);

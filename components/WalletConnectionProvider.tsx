@@ -31,7 +31,6 @@ const WalletConnectionProvider: FC = ({ children }) => {
     );
 
     const onError = (error: WalletError) => {
-        debugger;
         console.error(error);
     };
 

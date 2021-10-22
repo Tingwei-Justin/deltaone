@@ -41,7 +41,6 @@ export default class PriceStore {
         }
 
         for (const [assetSymbol, pair] of Object.entries(orcaPairs)) {
-            console.log("getting farm", assetSymbol);
             const farm = getFarmBySymbol(assetSymbol);
             if (farm?.mintAddress) {
                 pairsToStore[farm.mintAddress] = pair;

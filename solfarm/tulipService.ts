@@ -4,7 +4,7 @@ import * as serumAssoToken from "@project-serum/associated-token";
 import * as splToken from "@solana/spl-token";
 import * as serum from "@project-serum/serum";
 import { createAssociatedTokenAccount } from "@project-serum/associated-token";
-import { findIndex } from "lodash";
+import { findIndex, isUndefined } from "lodash";
 import { FarmDetails } from "./types";
 import FarmStore from "./stores/farmStore";
 import PriceStore from "./stores/priceStore";
@@ -239,10 +239,8 @@ export default class TulipService {
         });
         const tulipTokenMint = new PublicKey(TOKENS.TULIP.mintAddress);
         const farm = getFarmBySymbol(assetSymbol);
-        debugger;
         anchor.setProvider(provider);
 
-        debugger;
         // Address of the deployed program.
         const farmProgramId = new PublicKey(getLendingFarmProgramId());
         // Generate the program client from IDL.
@@ -525,18 +523,29 @@ export default class TulipService {
         leverageValue: number,
         obligationIdx: string | number | anchor.BN | number[] | Uint8Array | Buffer
     ) => {
-        const wallet = this.wallet,
-            walletToInitialize = {
-                signTransaction: wallet.signTransaction,
-                signAllTransactions: wallet.signAllTransactions,
-                publicKey: new anchor.web3.PublicKey(wallet.publicKey.toBase58()),
+        const farm = getFarmBySymbol(assetSymbol);
+        const reserve = getReserveByName(reserveName);
+        if (!farm) {
+            console.error("No Farm found.");
+            return;
+        }
+        if (isUndefined(reserve)) {
+            console.error("No Reserve Found.");
+            return;
+        }
+        if (isUndefined(this.stores.PriceStore)) {
+            console.error("No price store found.");
+            return;
+        }
+        const walletToInitialize = {
+                signTransaction: this.wallet.signTransaction,
+                signAllTransactions: this.wallet.signAllTransactions,
+                publicKey: new anchor.web3.PublicKey(this.wallet.publicKey.toBase58()),
             },
             provider = new anchor.Provider(this.web3, walletToInitialize, {
                 skipPreflight: true,
                 preflightCommitment: commitment,
             }),
-            farm = getFarmBySymbol(assetSymbol),
-            reserve = getReserveByName(reserveName),
             baseToken = farm.coins[0], // base / coin
             quoteToken = farm.coins[1]; // quote / pc | @to-do: change coins[0] and coins[1] to baseToken and quoteToken
 
@@ -551,11 +560,18 @@ export default class TulipService {
 
         // console.log('farm.marginIndex', farm.marginIndex);
 
+        const lendingFarmProgramId = new anchor.web3.PublicKey(getLendingFarmProgramId());
+        const farmMarginIndex = farm.marginIndex;
+        if (isUndefined(farmMarginIndex)) {
+            console.error("No Farm Margin Index.");
+            return;
+        }
+        debugger;
         const [userFarm, nonce2] = await findUserFarmAddress(
-            provider.wallet.publicKey,
-            new anchor.web3.PublicKey(getLendingFarmProgramId()),
+            this.wallet.publicKey,
+            lendingFarmProgramId,
             new anchor.BN(0),
-            new anchor.BN(farm.marginIndex)
+            new anchor.BN(farmMarginIndex)
         );
 
         const solfarmVaultProgramId = new anchor.web3.PublicKey(
@@ -566,7 +582,7 @@ export default class TulipService {
             solfarmVaultProgramId,
             new anchor.web3.PublicKey(getLendingFarmAccount(assetSymbol).serum_market),
             new anchor.web3.PublicKey(getLendingFarmProgramId()),
-            new anchor.BN(farm.marginIndex)
+            new anchor.BN(farmMarginIndex)
         );
 
         const [userObligationAcct1, obligationNonce] = await findUserFarmObligationAddress(
@@ -585,12 +601,13 @@ export default class TulipService {
             lendingProgramId
         );
 
+        debugger;
         const reserves = [
             new anchor.web3.PublicKey(reserve.account),
             // new anchor.web3.PublicKey(getLendingReserve(reserveNotBorrowing.symbol).account)
         ];
 
-        const { getTokenPrice } = this.getStore(StoreTypes.PriceStore);
+        const { getTokenPrice } = this.stores.PriceStore;
 
         const baseTokenPrice = Number(getTokenPrice(baseToken.symbol)),
             quoteTokenPrice = Number(getTokenPrice(quoteToken.symbol)),
@@ -608,6 +625,7 @@ export default class TulipService {
 
         const txn = new anchor.web3.Transaction();
 
+        debugger;
         let coinSourceTokenAccount, pcSourceTokenAccount;
         let borrowMint = reserve.mintAddress;
         // eslint-disable-next-line prefer-const
@@ -624,7 +642,7 @@ export default class TulipService {
             coinSourceTokenAccount = newAccount.publicKey;
             txn.add(
                 SystemProgram.createAccount({
-                    fromPubkey: wallet.publicKey,
+                    fromPubkey: this.wallet.publicKey,
                     newAccountPubkey: coinSourceTokenAccount,
                     lamports: baseTokenAmount * Math.pow(10, baseToken.decimals) + lamportsToCreateAccount,
                     space: ACCOUNT_LAYOUT.span,
@@ -637,7 +655,7 @@ export default class TulipService {
                     splToken.TOKEN_PROGRAM_ID,
                     new PublicKey(TOKENS.WSOL.mintAddress),
                     coinSourceTokenAccount,
-                    wallet.publicKey
+                    this.wallet.publicKey
                 )
             );
         }
@@ -654,7 +672,7 @@ export default class TulipService {
             pcSourceTokenAccount = newAccount.publicKey;
             txn.add(
                 SystemProgram.createAccount({
-                    fromPubkey: wallet.publicKey,
+                    fromPubkey: this.wallet.publicKey,
                     newAccountPubkey: pcSourceTokenAccount,
                     lamports: quoteTokenAmount * Math.pow(10, quoteToken.decimals) + lamportsToCreateAccount,
                     space: ACCOUNT_LAYOUT.span,
@@ -667,7 +685,7 @@ export default class TulipService {
                     splToken.TOKEN_PROGRAM_ID,
                     new PublicKey(TOKENS.WSOL.mintAddress),
                     pcSourceTokenAccount,
-                    wallet.publicKey
+                    this.wallet.publicKey
                 )
             );
         }
@@ -681,6 +699,7 @@ export default class TulipService {
                 ? getLendingFarmAccount(assetSymbol).vault_account
                 : getVaultAccount(assetSymbol);
 
+        debugger;
         txn.add(
             vaultProgram.instruction.depositBorrowZero(
                 reserves,
