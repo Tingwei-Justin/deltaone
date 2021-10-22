@@ -40,7 +40,6 @@ const MakeInvestment = () => {
 
     useEffect(() => {
         if (farmStoreInitiated && investmentInitiated && tulipService) {
-            debugger;
             const params = {
                 assetSymbol: "RAY-USDT",
                 reserveName: "USDT",
@@ -50,6 +49,7 @@ const MakeInvestment = () => {
             };
             // try to open a margin position, on RAY-USDT.
             // GOAL is to get this function working:
+            debugger;
             tulipService.openMarginPosition(params);
         }
     }, [farmStoreInitiated, investmentInitiated, tulipService]);

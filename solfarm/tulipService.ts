@@ -227,22 +227,21 @@ export default class TulipService {
         return sendAllTransactions(this.web3, this.wallet, fulfilledTransactions, [], extraSigners);
     };
     createUserFarm = async (assetSymbol: string, obligationIdx: number) => {
-        const wallet = this.wallet,
-            walletToInitialize = {
-                signTransaction: wallet.signTransaction,
-                signAllTransactions: wallet.signAllTransactions,
-                publicKey: new anchor.web3.PublicKey(wallet.publicKey.toBase58()),
-            },
-            provider = new anchor.Provider(this.web3, walletToInitialize, {
-                skipPreflight: true,
-                preflightCommitment: commitment,
-            }),
-            tulipTokenMint = new anchor.web3.PublicKey(TOKENS.TULIP.mintAddress),
-            farm = getFarmBySymbol(assetSymbol);
+        const walletToInitialize = {
+            signTransaction: this.wallet.signTransaction,
+            signAllTransactions: this.wallet.signAllTransactions,
+            publicKey: new PublicKey(this.wallet.publicKey.toBase58()),
+        };
+        const provider = new anchor.Provider(this.web3, walletToInitialize, {
+            skipPreflight: true,
+            preflightCommitment: commitment,
+        });
+        const tulipTokenMint = new PublicKey(TOKENS.TULIP.mintAddress);
+        const farm = getFarmBySymbol(assetSymbol);
         anchor.setProvider(provider);
 
         // Address of the deployed program.
-        const farmProgramId = new anchor.web3.PublicKey(getLendingFarmProgramId());
+        const farmProgramId = new PublicKey(getLendingFarmProgramId());
         // Generate the program client from IDL.
         // @ts-ignore
         const farmProgram = new anchor.Program(farmIdl, farmProgramId);
