@@ -26,6 +26,7 @@ const MakeInvestment = () => {
     const [investmentInitiated, setInvestmentInitiated] = useState(false);
     const [tulipService, setTulipService] = useState<TulipService>();
     const [startedSettingUpTulipService, setStartedSettingUpTulipService] = useState(false);
+    const [openMarginPosition, setOpenMarginPosition] = useState(false);
     const { publicKey } = useWallet();
     const wallet = useAnchorWallet();
 
@@ -39,7 +40,7 @@ const MakeInvestment = () => {
     }, [wallet]);
 
     useEffect(() => {
-        if (farmStoreInitiated && investmentInitiated && tulipService) {
+        async function openMarginPosition(tulipService: TulipService) {
             const params = {
                 assetSymbol: "RAY-USDT",
                 reserveName: "USDT",
@@ -49,9 +50,12 @@ const MakeInvestment = () => {
             };
             // try to open a margin position, on RAY-USDT.
             // GOAL is to get this function working:
-            tulipService.openMarginPosition(params);
+            await tulipService.openMarginPosition(params);
         }
-    }, [farmStoreInitiated, investmentInitiated, tulipService]);
+        if (farmStoreInitiated && investmentInitiated && tulipService) {
+            openMarginPosition(tulipService);
+        }
+    }, [farmStoreInitiated, investmentInitiated, tulipService, openMarginPosition]);
 
     useEffect(() => {
         async function initialize() {
@@ -66,7 +70,6 @@ const MakeInvestment = () => {
                 }
             } catch (error) {
                 console.error(error);
-            } finally {
             }
         }
         initialize();

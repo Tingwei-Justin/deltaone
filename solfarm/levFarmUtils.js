@@ -18,11 +18,13 @@ export async function findUserFarmAddress(
     debugger;
     let programAddress;
     try {
-        programAddress = await anchor.web3.PublicKey.findProgramAddress(seeds, programId);
+        debugger;
+        await anchor.web3.PublicKey.findProgramAddress(seeds, programId);
     } catch (error) {
         debugger;
         console.error(error);
     }
+    debugger;
     return programAddress;
 }
 

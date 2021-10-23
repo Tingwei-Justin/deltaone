@@ -116,10 +116,12 @@ export default class TulipService {
         const transactions = [];
 
         if (!this.stores.FarmStore) {
+            console.log("No farm store.");
             return;
         }
         const farm = getFarmBySymbol(assetSymbol);
         if (farm === undefined) {
+            console.log("No farm.");
             return;
         }
         const farmDetails: FarmDetails = this.stores.FarmStore.getFarm(farm.mintAddress);
@@ -160,7 +162,7 @@ export default class TulipService {
             createAccounts = true;
             obligationIdx = 0;
 
-            const createUserFarmManagerTxn = this.createUserFarm(assetSymbol, obligationIdx);
+            const createUserFarmManagerTxn = await this.createUserFarm(assetSymbol, obligationIdx);
             transactions.push(createUserFarmManagerTxn);
             extraSigners.push([]);
         } else {
@@ -239,6 +241,10 @@ export default class TulipService {
         });
         const tulipTokenMint = new PublicKey(TOKENS.TULIP.mintAddress);
         const farm = getFarmBySymbol(assetSymbol);
+        if (!farm) {
+            console.error("Could not find farm.");
+            return;
+        }
         anchor.setProvider(provider);
 
         // Address of the deployed program.
@@ -254,12 +260,20 @@ export default class TulipService {
             getLendingProgramId() // lendingInfo -> programs -> lending -> id
         );
 
-        const [userFarm, nonce2] = await findUserFarmAddress(
-            provider.wallet.publicKey,
-            new anchor.web3.PublicKey(getLendingFarmProgramId()), // lending_info.json -> programs -> farm -> id
+        const farmMarginIndex = farm.marginIndex;
+        if (isUndefined(farmMarginIndex)) {
+            console.log("No farm margin index.");
+            return;
+        }
+        debugger;
+        // TODO: this is not working.
+        const userFarm = await findUserFarmAddress(
+            this.wallet.publicKey,
+            new PublicKey(getLendingFarmProgramId()), // lending_info.json -> programs -> farm -> id
             new anchor.BN(0),
-            new anchor.BN(farm.marginIndex)
+            new anchor.BN(farmMarginIndex)
         );
+        debugger;
 
         // there is some obligation vault account? - but what is the obligation vault for?
         const [obligationVaultAccount, obligationVaultNonce] = await findObligationVaultAddress(
@@ -279,7 +293,7 @@ export default class TulipService {
             solfarmVaultProgramId,
             new anchor.web3.PublicKey(getLendingFarmAccount(assetSymbol).serum_market),
             farmProgramId,
-            new anchor.BN(farm.marginIndex)
+            new anchor.BN(farmMarginIndex)
         );
 
         const obligationLPTokenAccount = await serumAssoToken.getAssociatedTokenAddress(
@@ -362,6 +376,7 @@ export default class TulipService {
 
         anchor.setProvider(provider);
 
+        debugger;
         const [userFarm, nonce2] = await findUserFarmAddress(
             provider.wallet.publicKey,
             new anchor.web3.PublicKey(getLendingFarmProgramId()), // lending_info.json -> programs -> farm -> id
@@ -573,6 +588,7 @@ export default class TulipService {
             new anchor.BN(0),
             new anchor.BN(farmMarginIndex)
         );
+        debugger;
 
         const solfarmVaultProgramId = new anchor.web3.PublicKey(
             farm.platform === FARM_PLATFORMS.ORCA ? getOrcaVaultProgramId() : getVaultProgramId()
@@ -601,7 +617,6 @@ export default class TulipService {
             lendingProgramId
         );
 
-        debugger;
         const reserves = [
             new anchor.web3.PublicKey(reserve.account),
             // new anchor.web3.PublicKey(getLendingReserve(reserveNotBorrowing.symbol).account)
@@ -625,7 +640,6 @@ export default class TulipService {
 
         const txn = new anchor.web3.Transaction();
 
-        debugger;
         let coinSourceTokenAccount, pcSourceTokenAccount;
         let borrowMint = reserve.mintAddress;
         // eslint-disable-next-line prefer-const
@@ -699,7 +713,6 @@ export default class TulipService {
                 ? getLendingFarmAccount(assetSymbol).vault_account
                 : getVaultAccount(assetSymbol);
 
-        debugger;
         txn.add(
             vaultProgram.instruction.depositBorrowZero(
                 reserves,
@@ -777,8 +790,8 @@ export default class TulipService {
                 splToken.Token.createCloseAccountInstruction(
                     splToken.TOKEN_PROGRAM_ID,
                     coinSourceTokenAccount,
-                    wallet.publicKey,
-                    wallet.publicKey,
+                    this.wallet.publicKey,
+                    this.wallet.publicKey,
                     []
                 )
             );
@@ -789,8 +802,8 @@ export default class TulipService {
                 splToken.Token.createCloseAccountInstruction(
                     splToken.TOKEN_PROGRAM_ID,
                     pcSourceTokenAccount,
-                    wallet.publicKey,
-                    wallet.publicKey,
+                    this.wallet.publicKey,
+                    this.wallet.publicKey,
                     []
                 )
             );
