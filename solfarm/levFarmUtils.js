@@ -2,7 +2,7 @@ import * as anchor from "@project-serum/anchor";
 import { isNil } from "lodash";
 
 // finds a UserFarm account address
-export async function findUserFarmAddress(
+export function findUserFarmAddress(
     // the user's main wallet account
     authority,
     // the id of the lending program
@@ -15,21 +15,11 @@ export async function findUserFarmAddress(
     farm
 ) {
     let seeds = [authority.toBuffer(), index.toArrayLike(Buffer, "le", 8), farm.toArrayLike(Buffer, "le", 8)];
-    debugger;
-    let programAddress;
-    try {
-        debugger;
-        await anchor.web3.PublicKey.findProgramAddress(seeds, programId);
-    } catch (error) {
-        debugger;
-        console.error(error);
-    }
-    debugger;
-    return programAddress;
+    return anchor.web3.PublicKey.findProgramAddress(seeds, programId);
 }
 
 // used to find a UserFarmManager account address
-export async function findUserFarmManagerAddress(
+export function findUserFarmManagerAddress(
     // the user's main wallet account
     authority,
     // the id of the lending program
@@ -42,12 +32,12 @@ export async function findUserFarmManagerAddress(
     return anchor.web3.PublicKey.findProgramAddress(seeds, programId);
 }
 
-export async function findUserFarmObligationAddress(authority, userFarmAddr, lendingProgramId, obligationIndex) {
+export function findUserFarmObligationAddress(authority, userFarmAddr, lendingProgramId, obligationIndex) {
     let seeds = [authority.toBuffer(), userFarmAddr.toBuffer(), obligationIndex.toArrayLike(Buffer, "le", 8)];
     return anchor.web3.PublicKey.findProgramAddress(seeds, lendingProgramId);
 }
 
-export async function findLeveragedFarmAddress(solfarmVaultProgram, serumMarket, farmProgramId, farm) {
+export function findLeveragedFarmAddress(solfarmVaultProgram, serumMarket, farmProgramId, farm) {
     let seeds = [
         Buffer.from("new"),
         solfarmVaultProgram.toBuffer(),
@@ -57,17 +47,17 @@ export async function findLeveragedFarmAddress(solfarmVaultProgram, serumMarket,
     return anchor.web3.PublicKey.findProgramAddress(seeds, farmProgramId);
 }
 
-export async function findVaultManagerAddress(authority, leveragedFarmAccount, farmProgramId) {
+export function findVaultManagerAddress(authority, leveragedFarmAccount, farmProgramId) {
     let seeds = [authority.toBuffer(), leveragedFarmAccount.toBuffer()];
     return anchor.web3.PublicKey.findProgramAddress(seeds, farmProgramId);
 }
 
-export async function findObligationVaultAddress(userFarmAccount, obligationIndex, farmProgramId) {
-    let seeds = [userFarmAccount.toBuffer(), obligationIndex.toArrayLike(Buffer, "le", 8)];
+export function findObligationVaultAddress(userFarmAccount, obligationIndex, farmProgramId) {
+    let seeds = [new anchor.web3.PublicKey(userFarmAccount).toBuffer(), obligationIndex.toArrayLike(Buffer, "le", 8)];
     return anchor.web3.PublicKey.findProgramAddress(seeds, farmProgramId);
 }
 
-export async function findBorrowAuthorizer(lendingMarket, sourceProgram) {
+export function findBorrowAuthorizer(lendingMarket, sourceProgram) {
     let seeds = [lendingMarket.toBuffer(), sourceProgram.toBuffer()];
     return anchor.web3.PublicKey.findProgramAddress(seeds, sourceProgram);
 }
@@ -81,7 +71,7 @@ export function getDefaultSelectedCoinIndex(borrowDisabledCoinIndex) {
 }
 
 // finds a Orca UserFarm address
-export async function findOrcaUserFarmAddress(globalFarm, owner, tokenProgramId, aquaFarmProgramId) {
+export function findOrcaUserFarmAddress(globalFarm, owner, tokenProgramId, aquaFarmProgramId) {
     let seeds = [globalFarm.toBuffer(), owner.toBuffer(), tokenProgramId.toBuffer()];
     return anchor.web3.PublicKey.findProgramAddress(seeds, aquaFarmProgramId);
 }

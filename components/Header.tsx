@@ -51,8 +51,9 @@ const Header = () => {
     const { wallet } = useWallet();
     const router = useRouter();
     useEffect(() => {
+        console.warn("navigating...", document.URL, document.URL.includes("invest"));
         if (wallet && !document.URL.includes("invest")) {
-            debugger;
+            console.warn("navigating...");
             router.push(navigation.filter(option => option.name === "Invest")[0].href);
         }
     }, [wallet]);

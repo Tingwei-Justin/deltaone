@@ -265,15 +265,13 @@ export default class TulipService {
             console.log("No farm margin index.");
             return;
         }
-        debugger;
         // TODO: this is not working.
-        const userFarm = await findUserFarmAddress(
+        const [userFarm, nonce2] = await findUserFarmAddress(
             this.wallet.publicKey,
             new PublicKey(getLendingFarmProgramId()), // lending_info.json -> programs -> farm -> id
             new anchor.BN(0),
             new anchor.BN(farmMarginIndex)
         );
-        debugger;
 
         // there is some obligation vault account? - but what is the obligation vault for?
         const [obligationVaultAccount, obligationVaultNonce] = await findObligationVaultAddress(
@@ -282,6 +280,7 @@ export default class TulipService {
             farmProgramId
         );
 
+        debugger;
         const [userObligationAcct1, obligationNonce] = await findUserFarmObligationAddress(
             provider.wallet.publicKey,
             userFarm,
@@ -289,9 +288,11 @@ export default class TulipService {
             new anchor.BN(obligationIdx) // userFarm has `numberOfObligations`, so we'll do `numberOfObligations + 1` here
         );
 
-        const [leveragedFarm] = await findLeveragedFarmAddress(
+        const lendingFarmAct = getLendingFarmAccount(assetSymbol);
+        const [leveragedFarm, nonce] = await findLeveragedFarmAddress(
             solfarmVaultProgramId,
-            new anchor.web3.PublicKey(getLendingFarmAccount(assetSymbol).serum_market),
+            // @ts-ignore
+            new anchor.web3.PublicKey(lendingFarmAct.serum_market),
             farmProgramId,
             new anchor.BN(farmMarginIndex)
         );
@@ -305,12 +306,27 @@ export default class TulipService {
             obligationVaultAccount,
             tulipTokenMint
         );
-        const [obligationLPTokenAccountInfo, obligationTulipTokenAccountInfo] = await getMultipleAccounts(
+        console.log(
+            "obligationLPTokenAccount",
+            obligationLPTokenAccount,
+            "obligationTulipTokenAccount",
+            obligationTulipTokenAccount
+        );
+        const multipleAccounts = await getMultipleAccounts(
             this.web3,
             [obligationLPTokenAccount, obligationTulipTokenAccount],
             commitment
         );
 
+        console.log("multipleAccounts", multipleAccounts);
+        // [obligationLPTokenAccountInfo, obligationTulipTokenAccountInfo]
+
+        // console.log(
+        //     "obligationLPTokenAccountInfo",
+        //     obligationLPTokenAccountInfo,
+        //     "obligationTulipTokenAccountInfo",
+        //     obligationTulipTokenAccountInfo
+        // );
         const instructions = [];
 
         // if the user does not have an obligation lp token account - create one.
@@ -376,7 +392,6 @@ export default class TulipService {
 
         anchor.setProvider(provider);
 
-        debugger;
         const [userFarm, nonce2] = await findUserFarmAddress(
             provider.wallet.publicKey,
             new anchor.web3.PublicKey(getLendingFarmProgramId()), // lending_info.json -> programs -> farm -> id
@@ -581,14 +596,12 @@ export default class TulipService {
             console.error("No Farm Margin Index.");
             return;
         }
-        debugger;
         const [userFarm, nonce2] = await findUserFarmAddress(
             this.wallet.publicKey,
             lendingFarmProgramId,
             new anchor.BN(0),
             new anchor.BN(farmMarginIndex)
         );
-        debugger;
 
         const solfarmVaultProgramId = new anchor.web3.PublicKey(
             farm.platform === FARM_PLATFORMS.ORCA ? getOrcaVaultProgramId() : getVaultProgramId()

@@ -26,7 +26,6 @@ const MakeInvestment = () => {
     const [investmentInitiated, setInvestmentInitiated] = useState(false);
     const [tulipService, setTulipService] = useState<TulipService>();
     const [startedSettingUpTulipService, setStartedSettingUpTulipService] = useState(false);
-    const [openMarginPosition, setOpenMarginPosition] = useState(false);
     const { publicKey } = useWallet();
     const wallet = useAnchorWallet();
 
@@ -55,7 +54,7 @@ const MakeInvestment = () => {
         if (farmStoreInitiated && investmentInitiated && tulipService) {
             openMarginPosition(tulipService);
         }
-    }, [farmStoreInitiated, investmentInitiated, tulipService, openMarginPosition]);
+    }, [farmStoreInitiated, investmentInitiated, tulipService]);
 
     useEffect(() => {
         async function initialize() {
