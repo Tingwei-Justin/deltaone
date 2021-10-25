@@ -312,21 +312,12 @@ export default class TulipService {
             "obligationTulipTokenAccount",
             obligationTulipTokenAccount
         );
-        const multipleAccounts = await getMultipleAccounts(
+        const [obligationLPTokenAccountInfo, obligationTulipTokenAccountInfo] = await getMultipleAccounts(
             this.web3,
             [obligationLPTokenAccount, obligationTulipTokenAccount],
             commitment
         );
 
-        console.log("multipleAccounts", multipleAccounts);
-        // [obligationLPTokenAccountInfo, obligationTulipTokenAccountInfo]
-
-        // console.log(
-        //     "obligationLPTokenAccountInfo",
-        //     obligationLPTokenAccountInfo,
-        //     "obligationTulipTokenAccountInfo",
-        //     obligationTulipTokenAccountInfo
-        // );
         const instructions = [];
 
         // if the user does not have an obligation lp token account - create one.
