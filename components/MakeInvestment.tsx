@@ -6,7 +6,9 @@ import { connection } from "../config/config";
 
 import { USDollarFormatter } from "../utils/utils";
 import { getSOLBalance } from "../utils/wallet";
-import TulipService from "../solfarm/tulipService";
+
+// UNCOMMENT TO TEST:
+// import TulipService from "../solfarm/tulipService";
 // import { publicKeyForTesting } from "../secretKeys";
 import { PublicKey } from "@solana/web3.js";
 
@@ -24,7 +26,7 @@ const MakeInvestment = () => {
     const [usdcBalance, setUSDCBalance] = useState<number>(0);
     const [farmStoreInitiated, setFarmStoreInitiated] = useState(false);
     const [investmentInitiated, setInvestmentInitiated] = useState(false);
-    const [tulipService, setTulipService] = useState<TulipService>();
+    // const [tulipService, setTulipService] = useState<TulipService>();
     const [startedSettingUpTulipService, setStartedSettingUpTulipService] = useState(false);
     const { publicKey } = useWallet();
     const wallet = useAnchorWallet();
@@ -33,29 +35,29 @@ const MakeInvestment = () => {
 
     console.warn("rerendering..");
     useEffect(() => {
-        if (!tulipService && wallet && !startedSettingUpTulipService) {
-            setStartedSettingUpTulipService(true);
-            setTulipService(new TulipService(wallet, setFarmStoreInitiated));
-        }
+        // if (!tulipService && wallet && !startedSettingUpTulipService) {
+        //     setStartedSettingUpTulipService(true);
+        //     setTulipService(new TulipService(wallet, setFarmStoreInitiated));
+        // }
     }, [wallet]);
 
-    useEffect(() => {
-        async function openMarginPosition(tulipService: TulipService) {
-            const params = {
-                assetSymbol: "RAY-USDT",
-                reserveName: "USDT",
-                baseTokenAmount: 0,
-                quoteTokenAmount: 0,
-                leverageValue: 3,
-            };
-            // try to open a margin position, on RAY-USDT.
-            // GOAL is to get this function working:
-            await tulipService.openMarginPosition(params);
-        }
-        if (farmStoreInitiated && investmentInitiated && tulipService) {
-            openMarginPosition(tulipService);
-        }
-    }, [farmStoreInitiated, investmentInitiated, tulipService]);
+    // useEffect(() => {
+    // async function openMarginPosition(tulipService: TulipService) {
+    //     const params = {
+    //         assetSymbol: "RAY-USDT",
+    //         reserveName: "USDT",
+    //         baseTokenAmount: 0,
+    //         quoteTokenAmount: 0,
+    //         leverageValue: 3,
+    //     };
+    //     // try to open a margin position, on RAY-USDT.
+    //     // GOAL is to get this function working:
+    //     await tulipService.openMarginPosition(params);
+    // }
+    // if (farmStoreInitiated && investmentInitiated && tulipService) {
+    //     openMarginPosition(tulipService);
+    // }
+    // }, [farmStoreInitiated, investmentInitiated, tulipService]);
 
     useEffect(() => {
         async function initialize() {
@@ -142,8 +144,11 @@ const MakeInvestment = () => {
                                 className="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
                                 onClick={event => {
                                     event.stopPropagation();
+                                    // UNCOMMENT TO TEST:
                                     // const publicKeyForTestingEncoded = new PublicKey(publicKeyForTesting);
-                                    const isWalletTestAccount = false; // wallet?.publicKey.toBase58() == publicKeyForTestingEncoded.toBase58();
+                                    // const isWalletTestAccount = wallet?.publicKey.toBase58() == publicKeyForTestingEncoded.toBase58();
+                                    // COMMENT TO TEST:
+                                    const isWalletTestAccount = false;
                                     // if you have a wallet and it is whitelisted go ahead and try to make a position.
                                     if (wallet && isWalletTestAccount) {
                                         setInvestmentInitiated(true);

@@ -43,8 +43,12 @@ const getPerBlockAmountTotalValue = (perBlockAmount: number, price: number) => {
     return perBlockAmount * 2 * 60 * 60 * 24 * 365 * price;
 };
 
+export interface Farm {}
+export interface FarmMap {
+    [mintAddress: string | number]: Farm;
+}
 export default class FarmStore {
-    farms: {};
+    farms: FarmMap;
     web3: anchor.web3.Connection;
     priceStore: any;
     initiated: boolean;
