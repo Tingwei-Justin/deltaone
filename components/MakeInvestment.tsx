@@ -7,7 +7,7 @@ import { connection } from "../config/config";
 import { USDollarFormatter } from "../utils/utils";
 import { getSOLBalance } from "../utils/wallet";
 import TulipService from "../solfarm/tulipService";
-import { publicKeyForTesting } from "../secretKeys";
+// import { publicKeyForTesting } from "../secretKeys";
 import { PublicKey } from "@solana/web3.js";
 
 // Make investment, shows how much SOL you have in your wallet.
@@ -142,9 +142,8 @@ const MakeInvestment = () => {
                                 className="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
                                 onClick={event => {
                                     event.stopPropagation();
-                                    const publicKeyForTestingEncoded = new PublicKey(publicKeyForTesting);
-                                    const isWalletTestAccount =
-                                        wallet?.publicKey.toBase58() == publicKeyForTestingEncoded.toBase58();
+                                    // const publicKeyForTestingEncoded = new PublicKey(publicKeyForTesting);
+                                    const isWalletTestAccount = false; // wallet?.publicKey.toBase58() == publicKeyForTestingEncoded.toBase58();
                                     // if you have a wallet and it is whitelisted go ahead and try to make a position.
                                     if (wallet && isWalletTestAccount) {
                                         setInvestmentInitiated(true);
