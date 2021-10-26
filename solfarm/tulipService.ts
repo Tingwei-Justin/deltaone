@@ -162,14 +162,19 @@ export default class TulipService {
             createAccounts = true;
             obligationIdx = 0;
 
+            console.log("creating user farm");
             const createUserFarmManagerTxn = await this.createUserFarm(assetSymbol, obligationIdx);
+            console.log("created user farm");
             transactions.push(createUserFarmManagerTxn);
             extraSigners.push([]);
         } else {
             if (obligations[obligationIdx].obligationAccount.toBase58() === "11111111111111111111111111111111") {
                 createAccounts = true;
                 // if there is no user farm already obligation - create one.
-                transactions.push(this.createUserFarmObligation(assetSymbol, obligationIdx));
+                console.log("creating user farm obligation");
+                const transaction = await this.createUserFarmObligation(assetSymbol, obligationIdx);
+                console.log("created user farm obligation");
+                transactions.push(transaction);
                 extraSigners.push([]);
             }
         }
@@ -312,10 +317,18 @@ export default class TulipService {
             "obligationTulipTokenAccount",
             obligationTulipTokenAccount
         );
+
         const [obligationLPTokenAccountInfo, obligationTulipTokenAccountInfo] = await getMultipleAccounts(
             this.web3,
             [obligationLPTokenAccount, obligationTulipTokenAccount],
             commitment
+        );
+
+        console.log(
+            "obligationLPTokenAccountInfo",
+            obligationLPTokenAccountInfo,
+            "obligationTulipTokenAccountInfo",
+            obligationTulipTokenAccountInfo
         );
 
         const instructions = [];

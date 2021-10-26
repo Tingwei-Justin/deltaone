@@ -44,7 +44,7 @@ export async function getMultipleAccounts(
             }
         });
 
-    return accounts.map((account, idx) => {
+    const results = accounts.map((account, idx) => {
         if (account === null) {
             return null;
         }
@@ -53,4 +53,6 @@ export async function getMultipleAccounts(
             account,
         };
     });
+    console.log("results", results);
+    return results;
 }

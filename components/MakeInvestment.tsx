@@ -31,6 +31,7 @@ const MakeInvestment = () => {
 
     const slippage = 0.01;
 
+    console.warn("rerendering..");
     useEffect(() => {
         if (!tulipService && wallet && !startedSettingUpTulipService) {
             setStartedSettingUpTulipService(true);
