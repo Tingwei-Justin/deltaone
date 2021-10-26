@@ -9,7 +9,7 @@ import { FarmDetails } from "./types";
 import FarmStore from "./stores/farmStore";
 import PriceStore from "./stores/priceStore";
 import { sendAllTransactions } from "./web3";
-import { Commitment, Connection, PublicKey, SystemProgram } from "@solana/web3.js";
+import { Commitment, Connection, PublicKey, SystemProgram, Transaction } from "@solana/web3.js";
 import { TOKENS } from "../utils/tokens";
 import {
     getLendingFarmProgramId,
@@ -65,8 +65,9 @@ import {
 } from "./levFarmUtils";
 import { ACCOUNT_LAYOUT } from "../utils/layouts";
 import { getFarmBySymbol } from "./farms/farm";
-import { AnchorWallet } from "@solana/wallet-adapter-react";
 import { Dispatch, SetStateAction } from "react";
+import { Wallet } from "@solana/wallet-adapter-wallets";
+import { WalletContextState } from "@solana/wallet-adapter-react";
 
 // This is what solfarm uses.
 export const commitment: Commitment = "confirmed";
@@ -88,10 +89,11 @@ export enum StoreTypes {
 export default class TulipService {
     stores: { [StoreTypes.FarmStore]?: FarmStore; [StoreTypes.PriceStore]?: PriceStore };
     web3: Connection;
-    wallet: AnchorWallet;
-    constructor(wallet: AnchorWallet, setFarmStoreInitiated: Dispatch<SetStateAction<boolean>>) {
-        this.stores = {};
+    wallet: WalletContextState;
+    constructor(wallet: WalletContextState, setFarmStoreInitiated: Dispatch<SetStateAction<boolean>>) {
         this.wallet = wallet;
+        this.publicKey = wallet.publicKey;
+        this.stores = {};
         this.web3 = this.createWeb3Instance("https://solana-api.projectserum.com");
         this.stores[StoreTypes.PriceStore] = new PriceStore();
         const farmStore = new FarmStore(this.web3, this.stores[StoreTypes.PriceStore], setFarmStoreInitiated);
@@ -163,7 +165,7 @@ export default class TulipService {
             obligationIdx = 0;
 
             console.log("creating user farm");
-            const createUserFarmManagerTxn = await this.createUserFarm(assetSymbol, obligationIdx);
+            const createUserFarmManagerTxn = this.createUserFarm(assetSymbol, obligationIdx);
             console.log("created user farm");
             transactions.push(createUserFarmManagerTxn);
             extraSigners.push([]);
@@ -172,7 +174,7 @@ export default class TulipService {
                 createAccounts = true;
                 // if there is no user farm already obligation - create one.
                 console.log("creating user farm obligation");
-                const transaction = await this.createUserFarmObligation(assetSymbol, obligationIdx);
+                const transaction = this.createUserFarmObligation(assetSymbol, obligationIdx);
                 console.log("created user farm obligation");
                 transactions.push(transaction);
                 extraSigners.push([]);
@@ -201,7 +203,7 @@ export default class TulipService {
 
         // step 2 is to borrow money.
         if (obligationProgress > 0 && obligationProgress < 2) {
-            const [depositBorrowTxn, signer] = await this.depositBorrow(
+            const [depositBorrowTxn, signer] = this.depositBorrow(
                 assetSymbol,
                 reserveName,
                 baseTokenAmount,
@@ -272,7 +274,7 @@ export default class TulipService {
         }
         // TODO: this is not working.
         const [userFarm, nonce2] = await findUserFarmAddress(
-            this.wallet.publicKey,
+            this.publicKey,
             new PublicKey(getLendingFarmProgramId()), // lending_info.json -> programs -> farm -> id
             new anchor.BN(0),
             new anchor.BN(farmMarginIndex)
@@ -310,12 +312,6 @@ export default class TulipService {
         const obligationTulipTokenAccount = await serumAssoToken.getAssociatedTokenAddress(
             obligationVaultAccount,
             tulipTokenMint
-        );
-        console.log(
-            "obligationLPTokenAccount",
-            obligationLPTokenAccount,
-            "obligationTulipTokenAccount",
-            obligationTulipTokenAccount
         );
 
         const [obligationLPTokenAccountInfo, obligationTulipTokenAccountInfo] = await getMultipleAccounts(
@@ -382,11 +378,10 @@ export default class TulipService {
         assetSymbol: string,
         obligationIdx: string | number | anchor.BN | Buffer | Uint8Array | number[]
     ) => {
-        const wallet = this.wallet,
-            walletToInitialize = {
-                signTransaction: wallet.signTransaction,
-                signAllTransactions: wallet.signAllTransactions,
-                publicKey: new anchor.web3.PublicKey(wallet.publicKey.toBase58()),
+        const walletToInitialize = {
+                signTransaction: this.wallet.signTransaction,
+                signAllTransactions: this.wallet.signAllTransactions,
+                publicKey: new anchor.web3.PublicKey(this.wallet?.publicKey?.toBase58()),
             },
             provider = new anchor.Provider(this.web3, walletToInitialize, {
                 skipPreflight: true,
@@ -435,13 +430,16 @@ export default class TulipService {
 
         return txn;
     };
-    createUserFarmObligation = async (assetSymbol, obligationIdx) => {
+    createUserFarmObligation = async (
+        assetSymbol: string,
+        obligationIdx: string | number | Buffer | Uint8Array | number[] | anchor.BN
+    ) => {
         // console.log("obligation index", obligationIdx);
         const wallet = this.wallet,
             walletToInitialize = {
-                signTransaction: wallet.signTransaction,
-                signAllTransactions: wallet.signAllTransactions,
-                publicKey: new anchor.web3.PublicKey(wallet.publicKey.toBase58()),
+                signTransaction: this.signTransaction,
+                signAllTransactions: this.signAllTransactions,
+                publicKey: new anchor.web3.PublicKey(this.publicKey.toBase58()),
             },
             provider = new anchor.Provider(this.web3, walletToInitialize, {
                 skipPreflight: true,
@@ -703,7 +701,7 @@ export default class TulipService {
             pcSourceTokenAccount = newAccount.publicKey;
             txn.add(
                 SystemProgram.createAccount({
-                    fromPubkey: this.wallet.publicKey,
+                    fromPubkey: this.publicKey,
                     newAccountPubkey: pcSourceTokenAccount,
                     lamports: quoteTokenAmount * Math.pow(10, quoteToken.decimals) + lamportsToCreateAccount,
                     space: ACCOUNT_LAYOUT.span,
@@ -716,7 +714,7 @@ export default class TulipService {
                     splToken.TOKEN_PROGRAM_ID,
                     new PublicKey(TOKENS.WSOL.mintAddress),
                     pcSourceTokenAccount,
-                    this.wallet.publicKey
+                    this.publicKey
                 )
             );
         }

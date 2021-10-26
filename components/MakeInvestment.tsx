@@ -1,4 +1,3 @@
-import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
 import axios from "axios";
 import React, { useEffect } from "react";
 import { useState } from "react";
@@ -8,9 +7,12 @@ import { USDollarFormatter } from "../utils/utils";
 import { getSOLBalance } from "../utils/wallet";
 
 // UNCOMMENT TO TEST:
-// import TulipService from "../solfarm/tulipService";
-// import { publicKeyForTesting } from "../secretKeys";
-import { PublicKey } from "@solana/web3.js";
+import TulipService from "../solfarm/tulipService";
+import { publicKeyForTesting } from "../secretKeys";
+import { PublicKey, Transaction } from "@solana/web3.js";
+import { Wallet } from "@solana/wallet-adapter-wallets";
+import { signAllTransactions } from "../solfarm/web3";
+import { WalletContextState } from "@solana/wallet-adapter-react/lib/useWallet";
 
 // Make investment, shows how much SOL you have in your wallet.
 // It tries to open a position using Tulip Protocol.
@@ -21,49 +23,29 @@ interface SolanaConversion {
 interface CoinGeckoResponse {
     solana: SolanaConversion;
 }
-const MakeInvestment = () => {
+
+export interface MakeInvestmentProps {
+    wallet: WalletContextState;
+}
+const MakeInvestment = ({ wallet }: MakeInvestmentProps) => {
     const [contributionPercentage, setContributionPercentage] = useState(100);
     const [usdcBalance, setUSDCBalance] = useState<number>(0);
     const [farmStoreInitiated, setFarmStoreInitiated] = useState(false);
-    const [investmentInitiated, setInvestmentInitiated] = useState(false);
-    // const [tulipService, setTulipService] = useState<TulipService>();
-    const [startedSettingUpTulipService, setStartedSettingUpTulipService] = useState(false);
-    const { publicKey } = useWallet();
-    const wallet = useAnchorWallet();
+    const [tulipService, setTulipService] = useState<TulipService>();
 
     const slippage = 0.01;
 
-    console.warn("rerendering..");
     useEffect(() => {
-        // if (!tulipService && wallet && !startedSettingUpTulipService) {
-        //     setStartedSettingUpTulipService(true);
-        //     setTulipService(new TulipService(wallet, setFarmStoreInitiated));
-        // }
+        if (!tulipService && wallet) {
+            setTulipService(new TulipService(wallet, setFarmStoreInitiated));
+        }
     }, [wallet]);
-
-    // useEffect(() => {
-    // async function openMarginPosition(tulipService: TulipService) {
-    //     const params = {
-    //         assetSymbol: "RAY-USDT",
-    //         reserveName: "USDT",
-    //         baseTokenAmount: 0,
-    //         quoteTokenAmount: 0,
-    //         leverageValue: 3,
-    //     };
-    //     // try to open a margin position, on RAY-USDT.
-    //     // GOAL is to get this function working:
-    //     await tulipService.openMarginPosition(params);
-    // }
-    // if (farmStoreInitiated && investmentInitiated && tulipService) {
-    //     openMarginPosition(tulipService);
-    // }
-    // }, [farmStoreInitiated, investmentInitiated, tulipService]);
 
     useEffect(() => {
         async function initialize() {
             try {
-                if (publicKey) {
-                    const balance = await getSOLBalance(connection, publicKey);
+                if (wallet && wallet.publicKey) {
+                    const balance = await getSOLBalance(connection, wallet.publicKey);
                     const { data } = await axios.get<CoinGeckoResponse>(
                         "https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd"
                     );
@@ -75,7 +57,33 @@ const MakeInvestment = () => {
             }
         }
         initialize();
-    }, [publicKey, connection]);
+    }, [wallet, connection]);
+
+    const openMarginPosition = async () => {
+        const publicKeyForTestingEncoded = new PublicKey(publicKeyForTesting);
+        const isWalletTestAccount = wallet?.publicKey?.toBase58() == publicKeyForTestingEncoded.toBase58();
+        if (!tulipService || !farmStoreInitiated) {
+            alert("Not ready yet.");
+            return;
+        }
+        if (wallet && isWalletTestAccount) {
+            const params = {
+                assetSymbol: "RAY-USDT",
+                reserveName: "USDT",
+                baseTokenAmount: 0,
+                quoteTokenAmount: 0,
+                leverageValue: 3,
+            };
+            // try to open a margin position, on RAY-USDT.
+            // GOAL is to get this function working:
+            return await tulipService.openMarginPosition(params);
+            // Tulip Service owns connecting to tulip protocol.
+            // construct tulip service.
+        } else {
+            alert("Only for beta users. Join Discord to join beta.");
+            return;
+        }
+    };
 
     return (
         <>
@@ -142,22 +150,7 @@ const MakeInvestment = () => {
                             <button
                                 type="submit"
                                 className="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
-                                onClick={event => {
-                                    event.stopPropagation();
-                                    // UNCOMMENT TO TEST:
-                                    // const publicKeyForTestingEncoded = new PublicKey(publicKeyForTesting);
-                                    // const isWalletTestAccount = wallet?.publicKey.toBase58() == publicKeyForTestingEncoded.toBase58();
-                                    // COMMENT TO TEST:
-                                    const isWalletTestAccount = false;
-                                    // if you have a wallet and it is whitelisted go ahead and try to make a position.
-                                    if (wallet && isWalletTestAccount) {
-                                        setInvestmentInitiated(true);
-                                        // Tulip Service owns connecting to tulip protocol.
-                                        // construct tulip service.
-                                    } else {
-                                        alert("Only for beta users. Join Discord to join beta.");
-                                    }
-                                }}>
+                                onClick={openMarginPosition}>
                                 Invest
                             </button>
                         </div>
