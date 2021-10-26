@@ -22,8 +22,6 @@ import {
     isVersionFourOrFive,
     getVaultAmmLayout,
     getFarmSerumProgramId,
-    FARM_PLATFORMS,
-    isSupportedLendingFarm,
     getOrcaPeriodRate,
 } from "../config";
 import { FARMS } from "../farms/farm";
@@ -51,7 +49,7 @@ export default class FarmStore {
     priceStore: any;
     initiated: boolean;
     constructor(
-        web3: anchor.web3.Connection | undefined,
+        web3: anchor.web3.Connection,
         priceStore: any,
         setFarmStoreInitiated: Dispatch<SetStateAction<boolean>>
     ) {

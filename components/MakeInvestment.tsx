@@ -2,7 +2,7 @@ import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
 import axios from "axios";
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { connection } from "../config/config";
+import { connection } from "../confi/config";
 
 import { USDollarFormatter } from "../utils/utils";
 import { getSOLBalance } from "../utils/wallet";
