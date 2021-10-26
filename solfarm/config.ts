@@ -117,6 +117,7 @@ export const getVaultAmmLayout = (name: string) => {
 export const isVersionFourOrFive = (name: string) => {
     const vaultVersion = getVaultVersion(name);
 
+    // @ts-ignore
     return ["4", "5"].includes(vaultVersion);
 };
 //#endregion
@@ -125,6 +126,7 @@ export const isVersionFourOrFive = (name: string) => {
 export const getSaberVaultInfoAccount = (name: string) => {
     const vaultAccount = find(saberConfig.vault.accounts, account => account.name === name);
 
+    // @ts-ignore
     return vaultAccount?.infoAccount;
 };
 
@@ -360,6 +362,7 @@ export const getOrcaVaultFeeAccount = (name: string) => {
 export const getOrcaFarmPoolId = (name: string) => {
     const farm = find(orcaConfig.farms, farm => farm.name === name);
 
+    // @ts-ignore
     return farm?.poolId;
 };
 
@@ -372,6 +375,7 @@ export const getOrcaLpMintAddress = (name: string) => {
 export const getOrcaFarmPoolLpTokenAccount = (name: string) => {
     const farm = find(orcaConfig.farms, farm => farm.name === name);
 
+    // @ts-ignore
     return farm?.poolLpTokenAccount;
 };
 
@@ -539,11 +543,14 @@ export function getOrcaPeriodRate(
     decimals: Decimal.Value,
     orcaPrice: Decimal.Value
 ) {
-    return new Decimal(globalFarm.emissionsPerSecondNumerator.toString())
-        .mul(60 * 60 * 24 * 100) // the 100 here is divided by 10 as its divided later, in the SDK it was 1000
-        .div(globalFarm.emissionsPerSecondDenominator.toString())
-        .div(totalLiquidity)
-        .div(new Decimal(10).pow(decimals))
-        .mul(orcaPrice)
-        .toNumber();
+    return (
+        new Decimal(globalFarm.emissionsPerSecondNumerator.toString())
+            .mul(60 * 60 * 24 * 100) // the 100 here is divided by 10 as its divided later, in the SDK it was 1000
+            .div(globalFarm.emissionsPerSecondDenominator.toString())
+            // @ts-ignore
+            .div(totalLiquidity)
+            .div(new Decimal(10).pow(decimals))
+            .mul(orcaPrice)
+            .toNumber()
+    );
 }
