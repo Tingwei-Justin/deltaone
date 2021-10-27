@@ -1,6 +1,7 @@
-.next
-node_modules
+/.next/
+/node_modules
 .env.*
+.vscode
 secretKeys.ts
 package-lock.json
 yarn.lock
