@@ -2085,7 +2085,7 @@
   dependencies:
     "follow-redirects" "^1.14.0"
 
-"axios@^0.23.0":
+"axios@<=0.23.0":
   "integrity" "sha512-NmvAE4i0YAv5cKq8zlDoPd1VLKAqX5oLuZKs8xkJa4qi6RGn0uhCYFjWtHHC9EM/MwOwYWOs53W+V0aqEXq1sg=="
   "resolved" "https://registry.npmjs.org/axios/-/axios-0.23.0.tgz"
   "version" "0.23.0"
